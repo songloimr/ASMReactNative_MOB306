@@ -1,17 +1,31 @@
 import {
   StyleSheet, Text,
   View, TextInput, Pressable, Image,
-  TouchableHighlight, ScrollView, KeyboardAvoidingView
+  TouchableHighlight, ScrollView, KeyboardAvoidingView, Alert
 } from 'react-native'
-import React, { useState } from 'react'
-
-
+import React, { useState, useContext } from 'react'
 import iconShowPassword from '../../../assets/images/eye.jpg';
 import iconHidePassword from '../../../assets/images/eye2.png';
+import { UserContext } from '../../../contexts/UserContext';
 
 const Login = (props) => {
   const { navigation } = props;
   const [isShowPassword, setIsShowPassword] = useState(false)
+
+  const [email, setEmail] = useState('tomheo11233@gmail.com')
+  const [password, setPassword] = useState('tomheo11233')
+
+  const { onLogin } = useContext(UserContext);
+
+  const onLoginPress = async () => {
+    await onLogin(email, password);
+    console.log('onLoginPress: ', result);
+    if (!result) {
+      Alert.alert('Login failed');
+      setEmail('');
+      setPassword('');
+    }
+  }
   return (
     // dung de day man hinh len khi typing
     <KeyboardAvoidingView style={loginstyles.body}>
@@ -22,14 +36,21 @@ const Login = (props) => {
           <Text style={loginstyles.welcom}>Welcome back you’ve been missed</Text>
 
           <View style={loginstyles.usernameContainer}>
-            <Text style={loginstyles.usernameLabel}>UserName*</Text>
-            <TextInput style={loginstyles.usernameInput}></TextInput>
+            <Text style={loginstyles.usernameLabel}>Email*</Text>
+            <TextInput 
+            keyboardType='email-address'
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={loginstyles.usernameInput}></TextInput>
           </View>
 
           <View style={loginstyles.passwordContainer}>
-            <Text style={loginstyles.passwordLabel}>PassWord*</Text>
+            <Text style={loginstyles.passwordLabel}>Password*</Text>
             <View style={loginstyles.passwordInputIcon}>
-              <TextInput secureTextEntry={isShowPassword} style={loginstyles.paswordInput}></TextInput>
+              <TextInput 
+              value={password}
+              onChangeText={text => setPassword(text)}
+              secureTextEntry={isShowPassword} style={loginstyles.paswordInput}></TextInput>
               <TouchableHighlight style={loginstyles.eyeIcon} onPress={() => setIsShowPassword(!isShowPassword)}>
                 <Image
                   source={
@@ -38,7 +59,9 @@ const Login = (props) => {
               </TouchableHighlight>
             </View>
           </View>
-          <Pressable style={loginstyles.buttonLoginContainer}>
+          <Pressable
+          onPress={onLoginPress}
+          style={loginstyles.buttonLoginContainer}>
             <Text style={loginstyles.buttonLoginLabel}>Login</Text>
           </Pressable>
           <Pressable
@@ -47,14 +70,14 @@ const Login = (props) => {
             <Text style={loginstyles.buttonLoginLabel}>Register</Text>
           </Pressable>
 
-          <Text style={loginstyles.textContinue}>or conutiune with</Text>
+          <Text style={loginstyles.textContinue}>or continue with</Text>
 
           <View style={loginstyles.loginWithFaceBookOrGoogle}>
 
             <View style={loginstyles.loginFaceBookContainer}>
               <Pressable style={loginstyles.buttonLoginFaceBook}>
                 <Image source={require('../../../assets/images/f.png')}></Image>
-                <Text style={loginstyles.loginFaceBookLabel}>FaceBook</Text>
+                <Text style={loginstyles.loginFaceBookLabel}>Facebook</Text>
               </Pressable>
             </View>
 

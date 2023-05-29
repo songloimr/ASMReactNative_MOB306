@@ -1,10 +1,8 @@
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList } from 'react-native'
-import React, { useState } from 'react'
-
+import React, { useState, useEffect } from 'react'
+import { getNews } from '../../services/NewsService'
 import Trending from './Trending'
 import Latest from './Latest'
-
-
 
 //adapter
 const render = (value) => {
@@ -21,7 +19,19 @@ const render = (value) => {
     )
 }
 
-const Home = () => {
+const Home = (props) => {
+    const [news, setNews] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const getNewsData = async () => {
+        setLoading(true);
+        const res = await getNews();
+        if (res?.statusCode === 200) {
+            setNews(data);
+        }
+        setLoading(false);
+    }
+
 
     return (
         <View style={myStyle.body} >
@@ -77,7 +87,9 @@ const Home = () => {
                         showsHorizontalScrollIndicator={false}
                         showsVerticalScrollIndicator={false}
                         style={myStyle.listLatest}
-                        data={DATA_NEWS} //data
+                        data={news} //data
+                        refreshing={loading}
+                        onRefresh={getNewsData}
                         renderItem={render} //adapter
                         keyExtractor={(item, index) => item._id} />
                 </View>
