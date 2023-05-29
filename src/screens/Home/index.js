@@ -1,8 +1,10 @@
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList } from 'react-native'
 import React, { useState } from 'react'
 
-import Trending from './hompage/Trending'
-import Latest from './hompage/Latest'
+import Trending from './Trending'
+import Latest from './Latest'
+
+
 
 //adapter
 const render = (value) => {
@@ -24,17 +26,17 @@ const Home = () => {
     return (
         <View style={myStyle.body} >
             <View style={myStyle.header}>
-                <Image source={require('../../../media/kabar.png')} />
+                <Image source={require('../../assets/images/kabar.png')} />
                 <View style={myStyle.notifi_icon}>
-                    <Image source={require('../../../media/notifi_icon.png')} />
+                    <Image source={require('../../assets/images/notifi_icon.png')} />
                 </View>
             </View>
             <View style={myStyle.searchContainer}>
                 <TextInput style={myStyle.searchText} placeholder='Search' />
                 <Image style={myStyle.searchIcon}
-                    source={require('../../../media/search_icon.png')} />
+                    source={require('../../assets/images/search_icon.png')} />
                 <Image style={myStyle.searchIcon2}
-                    source={require('../../../media/search2_icon.png')} />
+                    source={require('../../assets/images/search2_icon.png')} />
             </View>
             <View style={myStyle.trendingContainer}>
                 <View style={myStyle.headerForTrending} >
@@ -43,10 +45,10 @@ const Home = () => {
                 </View>
                 <Trending
                     title="Russian warship: Moskva sinks in Black Sea"
-                    thumb={require('../../../media/trending1.png')}
+                    thumb={require('../../assets/images/trending1.png')}
                     time="4h ago"
                     author="BBC News"
-                    avatar={require('../../../media/logoBBC.png')}
+                    avatar={require('../../assets/images/logoBBC.png')}
                     country="Europe"
                 />
             </View>

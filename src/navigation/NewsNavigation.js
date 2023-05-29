@@ -2,8 +2,8 @@ import React,{useContext} from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 
-import Home from './screens/Home';
-import Explore from './screens/Explore';
+import Home from '../screens/Home';
+import Explore from '../screens/Home/Explore';
 
 const NewsNavigation = () => {
   return (

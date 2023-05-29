@@ -7,14 +7,14 @@ import {
   View,
 } from 'react-native';
 
-import Login from './src/components/users/screens/Login';
-import Register from './src/components/users/screens/Register';
-import Home from './src/components/news/screens/Home';
-import Detail from './src/components/news/screens/Detail';
+import Login from './src/screens/Users/Login';
+import Register from './src/screens/Users/Register';
+import Home from './src/screens/Home';
+import Detail from './src/screens/Home/Detail';
 
-import AppNavigation from './src/components/navigation/AppNavigation';
-import { UserProvider } from './src/components/users/UserContext';
-import { NewsProvider } from './src/components/news/NewsContext';
+import AppNavigation from './src/navigation/AppNavigation';
+import { UserProvider } from './src/contexts/UserContext';
+import { NewsProvider } from './src/contexts/NewsContext';
 
 function App(): JSX.Element {
 

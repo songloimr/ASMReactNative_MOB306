@@ -2,14 +2,22 @@ import {
   StyleSheet, Text, View,
   TextInput, Pressable, Image, TouchableHighlight, Alert
 } from 'react-native'
+
 import React, { useState, useContext } from 'react'
-import { UserContext } from '../UserContext';
+import { UserContext } from '../../../contexts/UserContext';
+import Spinner from 'react-native-loading-spinner-overlay';
+
+import iconShowPassword from '../../../assets/images/eye.jpg';
+import iconHidePassword from '../../../assets/images/eye2.png';
+
+
 
 const Register = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { onRegister } = useContext(UserContext);
   const { navigation } = props;
   const [isShowPassword, setIsShowPassword] = useState(true);
-  const [isShowPassword2, setIsShowPassword2] = useState(true);
+  const [isShowRePassword, setisShowRePassword] = useState(true);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,14 +29,16 @@ const Register = (props) => {
       Alert.alert('nhap lai khong khop!');
       return;
     }
+    setIsLoading(true);
     //goi API
     const result = await onRegister(email, password);
-    console.log('ket qua dang nhap:',result);
+    setIsLoading(false);
     //neu thanh cong thi chuyen ve man hinh login
     if (!result) {
-      Alert.alert('Email da ton tai!');
+      setCheckText('Account already exists');
       setEmail('');
       setPassword('');
+      setConfirmPassword('');
     } else {
       navigation.navigate('Login');
     }
@@ -48,6 +58,11 @@ const Register = (props) => {
 
   return (
     <View style={loginstyles.body}>
+      <Spinner
+        visible={isLoading}
+        textContent={'Loading...'}
+        textStyle={{ color: '#FFF' }}
+      />
       <Text style={loginstyles.hello}>Hello!</Text>
       <Text style={loginstyles.again}>Signup to get Started </Text>
 
@@ -55,7 +70,7 @@ const Register = (props) => {
         <Text style={loginstyles.usernameLabel}>UserName*</Text>
         <TextInput
           value={email}
-          onChangeText = {setEmail}
+          onChangeText={setEmail}
           onBlur={onChangeEmail}
           style={loginstyles.usernameInput}></TextInput>
         <Text style={{ color: 'red', fontSize: 10 }}>{checkText}</Text>
@@ -65,6 +80,7 @@ const Register = (props) => {
         <Text style={loginstyles.passwordLabel}>PassWord*</Text>
         <View style={loginstyles.passwordInputIcon}>
           <TextInput
+            value={password}
             onChangeText={setPassword}
             secureTextEntry={isShowPassword}
             style={loginstyles.paswordInput}></TextInput>
@@ -72,10 +88,7 @@ const Register = (props) => {
             style={loginstyles.eyeIcon}
             onPress={() => setIsShowPassword(!isShowPassword)}>
             <Image
-              source={
-                isShowPassword ?
-                  require('../../../media/eye2.png')
-                  : require('../../../media/eye.jpg')}></Image>
+              source={isShowPassword ? iconHidePassword : iconShowPassword}></Image>
           </TouchableHighlight>
         </View>
       </View>
@@ -84,17 +97,17 @@ const Register = (props) => {
         <Text style={loginstyles.passwordLabel}>Confirm PassWord*</Text>
         <View style={loginstyles.passwordInputIcon}>
           <TextInput
-            onChangeText={text => { setConfirmPassword(text) }}
-            secureTextEntry={isShowPassword2}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry={isShowRePassword}
             style={loginstyles.paswordInput}></TextInput>
           <TouchableHighlight
             style={loginstyles.eyeIcon}
-            onPress={() => setIsShowPassword2(!isShowPassword2)}>
+            onPress={() => setisShowRePassword(!isShowRePassword)}>
             <Image
               source={
-                isShowPassword2 ?
-                  require('../../../media/eye2.png')
-                  : require('../../../media/eye.jpg')}></Image>
+                isShowRePassword ? iconHidePassword : iconShowPassword
+              }></Image>
           </TouchableHighlight>
         </View>
       </View>
@@ -117,14 +130,14 @@ const Register = (props) => {
 
         <View style={loginstyles.loginFaceBookContainer}>
           <Pressable style={loginstyles.buttonLoginFaceBook}>
-            <Image source={require('../../../media/f.png')}></Image>
+            <Image source={require('../../../assets/images/f.png')}></Image>
             <Text style={loginstyles.loginFaceBookLabel}>FaceBook</Text>
           </Pressable>
         </View>
 
         <View style={loginstyles.loginGoogleContainer}>
           <Pressable style={loginstyles.buttonLoginGoogle}>
-            <Image source={require('../../../media/G.png')}></Image>
+            <Image source={require('../../../assets/images/G.png')}></Image>
             <Text style={loginstyles.loginGoogleLabel}>Google</Text>
           </Pressable>
         </View>

@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 
-import Login from './screens/Login';
-import Register from './screens/Register';
+import Login from '../screens/Users/Login';
+import Register from '../screens/Users/Register';
 
 const UserNavigation = () => {
   return (

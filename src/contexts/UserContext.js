@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext } from 'react'
-import { register } from './UserService';
+import { register } from '../services/UserService';
 
 export const UserContext = createContext();
 

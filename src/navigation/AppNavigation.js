@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
-import UserNavigation from '../users/UserNavigation'
-import NewsNavigation from '../news/NewsNavigation'
+import UserNavigation from './UserNavigation'
+import NewsNavigation from './NewsNavigation'
 import { NavigationContainer } from '@react-navigation/native';
-import { UserContext } from '../users/UserContext';
+import { UserContext } from '../contexts/UserContext';
 
 const AppNavigation = () => {
   const { user } = useContext(UserContext);

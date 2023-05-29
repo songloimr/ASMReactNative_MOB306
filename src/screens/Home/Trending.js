@@ -16,11 +16,11 @@ const Trending = ({ title, thumb, time, author, avatar, country }) => {
                         source={avatar} />
                     <Text style={myStyle.fontNewsName}>{author}</Text>
                     <Image style={myStyle.logoTime}
-                        source={require('../../../../media/logoTime.png')} />
+                        source={require('../../assets/images/logoTime.png')} />
                     <Text style={myStyle.fontTime}>{time}</Text>
                 </View>
                 <Image style={myStyle.dotIcon}
-                    source={require('../../../../media/3dot_Icon.png')} />
+                    source={require('../../assets/images/3dot_Icon.png')} />
             </View>
         </View>
     )

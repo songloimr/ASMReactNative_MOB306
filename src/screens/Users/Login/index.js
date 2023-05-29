@@ -5,6 +5,10 @@ import {
 } from 'react-native'
 import React, { useState } from 'react'
 
+
+import iconShowPassword from '../../../assets/images/eye.jpg';
+import iconHidePassword from '../../../assets/images/eye2.png';
+
 const Login = (props) => {
   const { navigation } = props;
   const [isShowPassword, setIsShowPassword] = useState(false)
@@ -29,9 +33,8 @@ const Login = (props) => {
               <TouchableHighlight style={loginstyles.eyeIcon} onPress={() => setIsShowPassword(!isShowPassword)}>
                 <Image
                   source={
-                    isShowPassword ?
-                      require('../../../media/eye2.png')
-                      : require('../../../media/eye.jpg')}></Image>
+                    isShowPassword ? iconHidePassword : iconShowPassword
+                  }></Image>
               </TouchableHighlight>
             </View>
           </View>
@@ -50,14 +53,14 @@ const Login = (props) => {
 
             <View style={loginstyles.loginFaceBookContainer}>
               <Pressable style={loginstyles.buttonLoginFaceBook}>
-                <Image source={require('../../../media/f.png')}></Image>
+                <Image source={require('../../../assets/images/f.png')}></Image>
                 <Text style={loginstyles.loginFaceBookLabel}>FaceBook</Text>
               </Pressable>
             </View>
 
             <View style={loginstyles.loginGoogleContainer}>
               <Pressable style={loginstyles.buttonLoginGoogle}>
-                <Image source={require('../../../media/G.png')}></Image>
+                <Image source={require('../../../assets/images/G.png')}></Image>
                 <Text style={loginstyles.loginGoogleLabel}>Google</Text>
               </Pressable>
             </View>
