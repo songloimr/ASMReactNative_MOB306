@@ -12,7 +12,6 @@ export const UserProvider = (props) => {
     const onRegister = async (email, password) => {
         try {
             await register(email, password);
-            console.log(res);
             return true;
         } catch (error) {
             console.log(error);
@@ -23,7 +22,6 @@ export const UserProvider = (props) => {
     const onLogin = async (email, password) => {
         try {
             const res = await login(email, password);
-            console.log('onLogin response: ', res);
             if (res.statusCode === 200) {
                 await AsyncStorage.setItem('token', res?.data?.token);
                 setUser(res?.data?.user)

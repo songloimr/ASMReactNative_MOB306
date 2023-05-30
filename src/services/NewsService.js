@@ -11,4 +11,3 @@ export const getNews = async () => {
         console.log(error);
     }
 }
-   
