@@ -11,20 +11,27 @@ import Login from './src/screens/Users/Login';
 import Register from './src/screens/Users/Register';
 import Home from './src/screens/Home';
 import Detail from './src/screens/Home/Detail';
+import Profile from './src/screens/Users/Profile';
 
 import AppNavigation from './src/navigation/AppNavigation';
 import { UserProvider } from './src/contexts/UserContext';
 import { NewsProvider } from './src/contexts/NewsContext';
+import Setting from './src/screens/Users/Profile/Setting';
+import MainProfile from './src/screens/Users/Profile/Main';
+import EditProfile from './src/screens/Users/Profile/EditProfile';
 
 function App(): JSX.Element {
 
   return (
     <SafeAreaView style={styles.body}>
-      <UserProvider>
+      {/* <UserProvider>
         <NewsProvider>
           <AppNavigation/>
         </NewsProvider>
-      </UserProvider>
+      </UserProvider> */}
+      {/* <Setting/> */}
+      {/* <EditProfile/> */}
+      <Profile/>
     </SafeAreaView>
   );
 }
