@@ -1,22 +1,68 @@
 import {
   Image, Pressable,
-  StyleSheet, Text, View, TouchableHighlight, Dimensions
+  StyleSheet, Text, View, TouchableHighlight, Dimensions, TouchableOpacity, FlatList
 } from 'react-native'
-import React from 'react'
 
+import React, { useEffect, useState, useContext } from 'react'
+import { getMyNews } from '../../../services/NewsService';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { UserContext } from '../../../contexts/UserContext';
 
-import TabRecent from './TabRecent'
-import TabNews from './TabNews'
+import Latest from '../../Home/Latest';
+
 
 const Tab = createMaterialTopTabNavigator();
 
+const ThongKe = ({ title, subTitle }) => {
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Text style={{ fontWeight: '600', color: '#000', }}>{title}</Text>
+      <Text style={{ color: '#4E4B66', }}>{subTitle}</Text>
+    </View>
+  )
+}
+
+const renderItem = ({ item }) => {
+  return (
+    <Latest
+      thumb={{ uri: item.image }}
+      title={item.title}
+      avatar={{ uri: item.createdBy.avatar }}
+      author={item.createdBy.name}
+      time={item.createdAt}
+    />
+  )
+}
 const MainProfile = (props) => {
+  const { user : currentUser} = useContext(UserContext);
   const { navigation } = props;
+  const [newList, setNewList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    (async function () {
+      const res = await getMyNews();
+      if (res?.statusCode === 200) {
+        setNewList(res.data);
+      }
+    })()
+  }, [])
+
+  const MyNewList = () => {
+    return (
+      <FlatList
+      style={{ backgroundColor: '#fff' }}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        data={newList}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => item._id}
+      />
+    )
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.vTitle}>
-
         <Text style={{ width: 24 }}></Text>
         <Text style={styles.txtProfile}>Profile</Text>
         <TouchableHighlight
@@ -27,26 +73,17 @@ const MainProfile = (props) => {
             source={require('../../../assets/images/settingIcon.png')} />
         </TouchableHighlight>
       </View>
-      <View style={styles.vAvatar}>
+      <View style={styles.avatarContainer}>
         <Image
           style={styles.avatar}
-          source={require('../../../assets/images/avatarEx.png')} />
-        <View style={styles.vCount}>
-          <Text style={styles.numCount}>2156</Text>
-          <Text style={styles.titleCount}>Followers</Text>
-        </View>
-        <View style={styles.vCount}>
-          <Text style={styles.numCount}>567</Text>
-          <Text style={styles.titleCount}>Following</Text>
-        </View>
-        <View style={styles.vCount}>
-          <Text style={styles.numCount}>23</Text>
-          <Text style={styles.titleCount}>News</Text>
-        </View>
+          source={{ uri : currentUser.avatar}} />
+        <ThongKe title='2156' subTitle='Followers' />
+        <ThongKe title='567' subTitle='Following' />
+        <ThongKe title='23' subTitle='News' />
       </View>
-      <View style={styles.vInfo}>
-        <Text style={styles.txtName}>Wilson Franci</Text>
-        <Text style={styles.txtInfo}>
+      <View style={styles.infomationContainer}>
+        <Text style={styles.txtName}>{currentUser.name}</Text>
+        <Text style={styles.description}>
           Lorem Ipsum is simply dummy text of the
           printing and typesetting industry.
         </Text>
@@ -70,47 +107,41 @@ const MainProfile = (props) => {
           screenOptions={{
             tabBarPressColor: '#FFFFFF',
             tabBarLabelStyle: {
-              height: 36,
               fontWeight: '400',
               fontSize: 16,
-              lineHeight: 24,
-              letterSpacing: 0.12,
               color: '#000000',
             },
             tabBarItemStyle: {
-              width: 112,
-              height: 36,
-              // justifyContent: 'center',
-              // alignItems: 'center',
+              width: 100,
             },
             tabBarContentContainerStyle: {
               justifyContent: 'center',
-              alignItems: 'center',
-            },
-            tabBarStyle: {
-              // borderBottomEndRadius: 30,
-              // borderBottomStartRadius: 30,
-              backgroundColor: '#FFFFFF',
-              // height: 36,
-            },
-            tabBarIndicatorContainerStyle: {
-              justifyContent: 'center',
-              alignItems: 'center',
             },
             tabBarIndicatorStyle: {
               backgroundColor: '#1877F2',
               height: 4,
-              borderRadius: 40,
-              width: 70,
-              marginHorizontal: Dimensions.get('window').width / 2 - 112,
+              left: 125,
             },
           }}
         >
-          <Tab.Screen name="News" component={TabNews} />
-          <Tab.Screen name="Recent" component={TabRecent} />
+          <Tab.Screen name="News" component={MyNewList} />
         </Tab.Navigator>
       </View>
 
+      <TouchableOpacity onPress={() => navigation.navigate('CreateNews')} style={{
+        position: 'absolute',
+        right: 24,
+        bottom: 24,
+        width: 54,
+        height: 54,
+        borderRadius: 27,
+        elevation: 5,
+        backgroundColor: '#1877F2',
+      }}>
+        <Image source={require('../../../assets/images/plus.png')}
+          style={{ tintColor: '#FFFFFF', width: 24, height: 24, margin: 15 }}
+        />
+      </TouchableOpacity>
     </View>
   )
 }
@@ -139,7 +170,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  txtInfo: {
+  description: {
     fontWeight: '400',
     fontSize: 16,
     lineHeight: 24,
@@ -153,31 +184,20 @@ const styles = StyleSheet.create({
     letterSpacing: 0.12,
     color: '#000000',
   },
-  vInfo: {
+  infomationContainer: {
     marginBottom: 16,
   },
-  titleCount: {
-    fontWeight: '400',
-    fontSize: 16,
-    lineHeight: 24,
-    letterSpacing: 0.12,
-    color: '#4E4B66',
-  },
-  numCount: {
-    fontWeight: '600',
-    fontSize: 16,
-    lineHeight: 24,
-    letterSpacing: 0.12,
-    color: '#000000',
-  },
-  vCount: {
-    alignItems: 'center',
-  },
-  vAvatar: {
+
+  avatarContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 16,
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   txtProfile: {
     fontWeight: '400',
@@ -200,6 +220,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 24,
+    paddingHorizontal: 24,
+    paddingTop: 24,
   }
 })

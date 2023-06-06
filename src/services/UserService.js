@@ -12,3 +12,8 @@ export const login = async (email, password) => {
     const response = await AxiosInstance().post('/auth/login', body);
     return response;
 }
+
+export const updateInfomation = async (infomation) => {
+    const response = await AxiosInstance().post(`/users/update-profile`, infomation);
+    return response;
+}

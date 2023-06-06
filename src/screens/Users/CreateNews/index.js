@@ -1,5 +1,8 @@
 import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { createNews } from '../../../services/NewsService'
+import { launchImageLibrary } from 'react-native-image-picker';
+
 
 const ButtonFormat = ({ src }) => {
     return (
@@ -8,10 +11,33 @@ const ButtonFormat = ({ src }) => {
         </TouchableOpacity>
     )
 }
+
+
+
 const CreateNews = () => {
-    const [title, setTitle] = useState('Healthy Living: Diet and Exercise Tips & Tools for Success')
-    const [content, setContent] = useState('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec venenatis lectus, et dapibus eros. Praesent id magna quis purus pharetra scelerisque ut quis felis. Duis dictum efficitur purus et blandit. Duis vel consequat dui. Nullam euismod, nisl eu fermentum convallis, arcu lectus sagittis ipsum, in elementum tortor purus vitae ligula. Mauris at enim elementum, laoreet metus sit amet, cursus orci. Sed nec elit libero. In accumsan mi non sollicitudin tincidunt. Proin molestie orci id pulvinar placerat.')
+    const [title, setTitle] = useState('')
+    const [content, setContent] = useState('')
     const [image, setImage] = useState(null)
+    const [publishClicked, setPublishClicked] = useState(false)
+    const [canPublish, setCanPublish] = useState(false)
+    useEffect(() => {
+        if (publishClicked) {
+            (async function () {
+                const res = await createNews(title, content, image);
+                if (res?.statusCode === 200) {
+                    console.log(res.data)
+                }
+            })()
+        }
+    }, [publishClicked])
+
+    useEffect(() => {
+        setCanPublish(title.length > 5 && content.length > 10)
+    }, [title, content])
+
+    const handlePublish = () => {
+        setPublishClicked(true)
+    }
 
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
@@ -22,8 +48,12 @@ const CreateNews = () => {
                         <Text style={{ marginTop: 8 }}>Add Cover Photo</Text>
                     </View>
                 </TouchableOpacity>
-                <TextInput multiline value={title} placeholder='News title' style={styles.inputTitle} />
-                <TextInput multiline value={content} placeholder='Add News/Article' style={styles.inputContent} />
+                <TextInput multiline
+                    onChangeText={(text) => setTitle(text)}
+                    placeholder='News title' style={styles.inputTitle} />
+                <TextInput multiline
+                    onChangeText={(text) => setContent(text)}
+                    placeholder='Add News/Article' style={styles.inputContent} />
                 <View style={styles.formatBar}>
                     <ButtonFormat src={require('../../../assets/images/bold.png')} />
                     <ButtonFormat src={require('../../../assets/images/italic.png')} />
@@ -39,8 +69,8 @@ const CreateNews = () => {
                     <ButtonFormat src={require('../../../assets/images/add_image.png')} />
                     <ButtonFormat src={require('../../../assets/images/more.png')} />
                 </View>
-                <TouchableOpacity style={{ margin: 14, backgroundColor: '#EEF1F4', borderRadius: 6, paddingHorizontal: 10 }}>
-                    <Text style={{ color: '#A0A3BD', margin: 14 }}>Publish</Text>
+                <TouchableOpacity disabled={!canPublish} onPress={handlePublish} style={[{ margin: 14, borderRadius: 6, paddingHorizontal: 10 }, canPublish ? styles.btnEnabled : styles.btnDisabled]}>
+                    <Text style={[{ margin: 14, fontWeight: '600' }, canPublish && { color : '#fff'}]}>Publish</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -88,5 +118,13 @@ const styles = StyleSheet.create({
     toolBar: {
         backgroundColor: 'white',
         flexDirection: 'row',
+    },
+    btnEnabled: {
+        backgroundColor: '#1877F2',
+        color: '#fff',
+    },
+    btnDisabled: {
+        backgroundColor: '#EEF1F4',
+        color: '#667080',
     }
 })

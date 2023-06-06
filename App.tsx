@@ -24,14 +24,14 @@ function App(): JSX.Element {
 
   return (
     <SafeAreaView style={styles.body}>
-      {/* <UserProvider>
+      <UserProvider>
         <NewsProvider>
           <AppNavigation/>
         </NewsProvider>
-      </UserProvider> */}
+      </UserProvider>
       {/* <Setting/> */}
       {/* <EditProfile/> */}
-      <Profile/>
+      {/* <Profile/> */}
     </SafeAreaView>
   );
 }

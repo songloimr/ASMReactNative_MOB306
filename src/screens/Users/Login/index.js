@@ -7,8 +7,8 @@ import React, { useState, useContext } from 'react'
 import { UserContext } from '../../../contexts/UserContext';
 import InputPassword from '../../../components/InputPassword';
 import InputText from '../../../components/InputText';
-
 import Spinner from 'react-native-loading-spinner-overlay';
+
 
 
 const Login = (props) => {

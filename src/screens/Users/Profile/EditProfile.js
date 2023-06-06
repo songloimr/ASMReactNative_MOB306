@@ -1,119 +1,150 @@
 import {
   StyleSheet, Text,
-  TextInput, View, Image, TouchableHighlight, Dimensions, 
+  TextInput, View, Image, TouchableHighlight, Dimensions,
   KeyboardAvoidingView, ScrollView,
 } from 'react-native'
-import React from 'react'
-
+import React, { useEffect, useState, useContext } from 'react'
+import { updateInfomation } from '../../../services/UserService';
+import Spinner from 'react-native-loading-spinner-overlay/lib';
+import Snackbar from 'react-native-snackbar';
+import { UserContext } from '../../../contexts/UserContext';
 const EditProfile = (props) => {
+  const { user: currentUser, setUser } = useContext(UserContext);
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSaveClicked, setIsSaveClicked] = React.useState(false);
+
+  useEffect(() => {
+    if (isSaveClicked) {
+      (async function () {
+        setIsLoading(true);
+        const res = await updateInfomation({
+          fullName,
+          email,
+          phoneNumber,
+          address
+        });
+        if (res?.statusCode === 200) {
+          setUser(currentUser, ...res.data);
+          Snackbar.show({
+            text: 'Cập nhật thông tin thành công!',
+            duration: Snackbar.LENGTH_SHORT,
+          });
+        }
+        setIsLoading(false);
+      })()
+    }
+  }, [isSaveClicked])
+
+  const handleSave = () => {
+    setIsSaveClicked(true);
+  }
+
+  const [avatar, setAvatar] = useState(currentUser.avatar);
+  const [fullName, setFullName] = React.useState(currentUser.name);
+  const [email, setEmail] = React.useState(currentUser.email);
+  const [phoneNumber, setPhoneNumber] = React.useState(currentUser.phone);
+  const [address, setAddress] = React.useState(currentUser.address);
+
+
   const { navigation } = props;
   return (
-    <KeyboardAvoidingView>
+    <KeyboardAvoidingView style={{ backgroundColor: '#fff', flex: 1 }}>
+      <Spinner
+        visible={isLoading}
+        textContent={'Loading...'}
+        textStyle={styles.spinnerTextStyle}
+      />
       <ScrollView>
-    <View style={styles.container}>
-      <View style={styles.vHeader}>
-        <TouchableHighlight
-          underlayColor={'rgba(0, 0, 0, 0)'}
-          onPress={() => navigation.goBack()}>
-          <Image
-            style={styles.iconBack}
-            source={require('../../../assets/images/tick_x_Icon.png')} />
-        </TouchableHighlight>
-        <Text style={styles.txtHeader}>Edit Profile</Text>
-        <TouchableHighlight
-          underlayColor={'rgba(0, 0, 0, 0)'}
-          onPress={() => { }}>
-          <Image
-            style={styles.iconBack}
-            source={require('../../../assets/images/tick_v_Icon.png')} />
-        </TouchableHighlight>
-      </View>
-
-      <View style={styles.vAvatar}>
-        <Image
-          style={styles.imgAvatar}
-          source={require('../../../assets/images/avatarEx.png')} />
-        <TouchableHighlight
-          style={styles.iconEditAvatar}
-          underlayColor={'rgba(0, 0, 0, 0)'}
-          onPress={() => { }}>
-          <Image
-            // style={styles.iconEditAvatar}
-            source={require('../../../assets/images/Frame.png')} />
-        </TouchableHighlight>
-      </View>
-
-      <View style={styles.vbody}>
-        <View style={styles.vbodyItem}>
-          <Text style={styles.txtTitle}>Username</Text>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Username"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
-        </View>
-
-        <View style={styles.vbodyItem}>
-          <Text style={styles.txtTitle}>Full Name</Text>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Full Name"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
-        </View>
-
-        <View style={styles.vbodyItem}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.txtTitle}>Email Address</Text>
-            <Text style={[styles.txtTitle, { color: '#C30052' }]}>*</Text>
+        <View style={styles.container}>
+          <View style={styles.vHeader}>
+            <TouchableHighlight
+              underlayColor={'rgba(0, 0, 0, 0)'}
+              onPress={() => navigation.goBack()}>
+              <Image
+                style={styles.iconBack}
+                source={require('../../../assets/images/tick_x_Icon.png')} />
+            </TouchableHighlight>
+            <Text style={styles.txtHeader}>Edit Profile</Text>
+            <TouchableHighlight
+              underlayColor={'rgba(0, 0, 0, 0)'}
+              onPress={handleSave}>
+              <Image
+                style={styles.iconBack}
+                source={require('../../../assets/images/tick_v_Icon.png')} />
+            </TouchableHighlight>
           </View>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Email Address*"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
-        </View>
 
-        <View style={styles.vbodyItem}>
-          <View style={{ flexDirection: 'row' }}>
-            <Text style={styles.txtTitle}>Phone Number</Text>
-            <Text style={[styles.txtTitle, { color: '#C30052' }]}>*</Text>
+          <View style={styles.avatarContainer}>
+            <Image
+              style={styles.imgAvatar}
+              source={{ uri: currentUser.avatar }} />
+            <TouchableHighlight
+              style={styles.iconEditAvatar}
+              underlayColor={'rgba(0, 0, 0, 0)'}
+              onPress={() => { }}>
+              <Image
+                source={require('../../../assets/images/Frame.png')} />
+            </TouchableHighlight>
           </View>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Phone Number*"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
+
+          <View style={styles.vbody}>
+
+            <View style={styles.vbodyItem}>
+              <Text style={styles.txtTitle}>Full Name</Text>
+              <TextInput
+                onEndEditing={(e) => setFullName(e.nativeEvent.text)}
+                value={fullName}
+                style={styles.txtInput}
+                placeholder="Enter your Full Name "
+                placeholderTextColor="grey"
+                keyboardType="default"
+              />
+            </View>
+
+            <View style={styles.vbodyItem}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.txtTitle}>Email Address</Text>
+                <Text style={[styles.txtTitle, { color: '#C30052' }]}>*</Text>
+              </View>
+              <TextInput
+                value={email}
+                onEndEditing={(e) => setEmail(e.nativeEvent.text)}
+                style={styles.txtInput}
+                placeholder="Enter your Email Address*"
+                placeholderTextColor="grey"
+                keyboardType="email-address"
+              />
+            </View>
+
+            <View style={styles.vbodyItem}>
+              <View style={{ flexDirection: 'row' }}>
+                <Text style={styles.txtTitle}>Phone Number</Text>
+                <Text style={[styles.txtTitle, { color: '#C30052' }]}>*</Text>
+              </View>
+              <TextInput
+                value={phoneNumber}
+                onEndEditing={(e) => setPhoneNumber(e.nativeEvent.text)}
+                style={styles.txtInput}
+                placeholder="Enter your Phone Number*"
+                placeholderTextColor="grey"
+                keyboardType="phone-pad"
+              />
+            </View>
+
+            <View style={styles.vbodyItem}>
+              <Text style={styles.txtTitle}>Address</Text>
+              <TextInput
+                value={address}
+                style={styles.txtInput}
+                placeholder="Enter your Address"
+                placeholderTextColor="grey"
+                keyboardType="default"
+              />
+            </View>
+          </View>
         </View>
-
-        <View style={styles.vbodyItem}>
-          <Text style={styles.txtTitle}>Bio</Text>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Bio"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
-        </View>
-
-        <View style={styles.vbodyItem}>
-          <Text style={styles.txtTitle}>Website</Text>
-          <TextInput
-            style={styles.txtInput}
-            placeholder="Enter your Website"
-            placeholderTextColor="grey"
-            keyboardType="default"
-          />
-        </View>
-
-      </View>
-
-    </View>
-    </ScrollView>
+      </ScrollView>
     </KeyboardAvoidingView>
   )
 }
@@ -164,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 70,
     backgroundColor: '#C4C4C4',
   },
-  vAvatar: {
+  avatarContainer: {
     width: '100%',
     height: 140,
     flexDirection: 'row',
@@ -190,5 +221,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+    backgroundColor: '#FFFFFF',
   },
 })

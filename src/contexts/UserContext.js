@@ -25,6 +25,7 @@ export const UserProvider = (props) => {
             if (res.statusCode === 200) {
                 await AsyncStorage.setItem('token', res?.data?.token);
                 setUser(res?.data?.user)
+                console.log(res?.data?.user);
                 return true;
             }
         } catch (error) {
