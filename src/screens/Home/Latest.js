@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import moment from 'moment'
 
@@ -15,7 +15,7 @@ const Latest = ({ thumb, title, avatar, author, time }) => {
     }
 
     return (
-        <View style={myStyle.container}>
+        <TouchableOpacity style={myStyle.container}>
             <Image style={myStyle.thumbnail} source={thumb} />
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <Text style={myStyle.fontNationality}>Europe</Text>
@@ -34,7 +34,7 @@ const Latest = ({ thumb, title, avatar, author, time }) => {
                         source={require('../../assets/images/3dot_Icon.png')} />
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

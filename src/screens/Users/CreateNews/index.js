@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, Modal } from 'react-native'
+import React, { useState, useEffect, useCallback } from 'react'
 import { createNews } from '../../../services/NewsService'
-import { launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 
 
 const ButtonFormat = ({ src }) => {
@@ -13,19 +13,20 @@ const ButtonFormat = ({ src }) => {
 }
 
 
-
 const CreateNews = () => {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [image, setImage] = useState(null)
     const [publishClicked, setPublishClicked] = useState(false)
     const [canPublish, setCanPublish] = useState(false)
+    const [isShowModal, setIsShowModal] = useState(false)
     useEffect(() => {
         if (publishClicked) {
             (async function () {
                 const res = await createNews(title, content, image);
                 if (res?.statusCode === 200) {
                     console.log(res.data)
+                    resetForm();
                 }
             })()
         }
@@ -35,25 +36,70 @@ const CreateNews = () => {
         setCanPublish(title.length > 5 && content.length > 10)
     }, [title, content])
 
-    const handlePublish = () => {
+    const handlePublish = async () => {
         setPublishClicked(true)
     }
+
+    const resetForm = () => {
+        setTitle('');
+        setContent('');
+        setImage(null);
+        setPublishClicked(false);
+    };
+
 
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={styles.container}>
-                <TouchableOpacity style={styles.btnAddImage}>
-                    <View style={{ alignItems: 'center' }}>
-                        <Image style={{ width: 24, height: 24 }} source={require('../../../assets/images/plus.png')} />
-                        <Text style={{ marginTop: 8 }}>Add Cover Photo</Text>
-                    </View>
+                <TouchableOpacity style={styles.btnAddImage} onPress={() => setIsShowModal(!isShowModal)} >
+                    {image ? (
+                        <Image style={{ width: '100%', height: '100%' }} source={{ uri: image }} />
+                    ) : (
+                        <View style={{ alignItems: 'center' }}>
+                            <Image style={{ width: 24, height: 24 }} source={require('../../../assets/images/plus.png')} />
+                            <Text style={{ marginTop: 8 }}>Add Cover Photo</Text>
+                        </View>
+                    )}
                 </TouchableOpacity>
+
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={isShowModal}
+                    onRequestClose={() => {
+                        setIsShowModal(!isShowModal);
+                    }}>
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+                        <View style={{ backgroundColor: 'white', width: '90%', height: '50%', borderRadius: 6, padding: 16, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                            <TouchableOpacity style={{width: 35,height: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => setIsShowModal(false)}>
+                            <Image source={require('../../../assets/images/back1.png')}></Image>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{height: 35, width: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => launchImageLibrary({ mediaType: 'photo' }, (res) => {
+                                if (res?.assets?.[0]?.uri) {
+                                    setImage(res.assets[0].uri)
+                                }
+                                setIsShowModal(false)
+                            })}>
+                                <Image source={require('../../../assets/images/image-gallery.png')}></Image>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{width: 35, height: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => launchCamera({ mediaType: 'photo' }, (res) => {
+                                if (res?.assets?.[0]?.uri) {
+                                    setImage(res.assets[0].uri)
+                                }
+                                setIsShowModal(false)
+                            })}>
+                                <Image source={require('../../../assets/images/photo-camera.png')}></Image>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
                 <TextInput multiline
                     onChangeText={(text) => setTitle(text)}
-                    placeholder='News title' style={styles.inputTitle} />
+                    placeholder='News title' style={styles.inputTitle} value={title} />
                 <TextInput multiline
                     onChangeText={(text) => setContent(text)}
-                    placeholder='Add News/Article' style={styles.inputContent} />
+                    placeholder='Add News/Article' style={styles.inputContent} value={content} />
                 <View style={styles.formatBar}>
                     <ButtonFormat src={require('../../../assets/images/bold.png')} />
                     <ButtonFormat src={require('../../../assets/images/italic.png')} />
@@ -70,7 +116,7 @@ const CreateNews = () => {
                     <ButtonFormat src={require('../../../assets/images/more.png')} />
                 </View>
                 <TouchableOpacity disabled={!canPublish} onPress={handlePublish} style={[{ margin: 14, borderRadius: 6, paddingHorizontal: 10 }, canPublish ? styles.btnEnabled : styles.btnDisabled]}>
-                    <Text style={[{ margin: 14, fontWeight: '600' }, canPublish && { color : '#fff'}]}>Publish</Text>
+                    <Text style={[{ margin: 14, fontWeight: '600' }, canPublish && { color: '#fff' }]}>Publish</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
