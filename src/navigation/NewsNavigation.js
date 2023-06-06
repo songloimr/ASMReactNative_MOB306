@@ -3,10 +3,11 @@ import { Image } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 
-import Home from '../screens/Home';
+import HomeStack from './HomeStack';
 import Bookmark from '../screens/Home/Bookmark';
-import Profile from '../screens/Users/Profile';
+import ProfileStack from './ProfileStack';
 import CreateNews from '../screens/Users/CreateNews';
+import Detail from '../screens/Home/Detail';
 
 function CustomTabBarIcon(route, color) {
   let icon = require('../assets/images/bottomnavigation_home.png')
@@ -17,7 +18,7 @@ function CustomTabBarIcon(route, color) {
     case 'Bookmark':
       icon = require('../assets/images/bottomnavigation_bookmark.png')
       break;
-    case 'Profile':
+    case 'ProfileStack':
       icon = require('../assets/images/bottomnavigation_profile.png')
       break;
     default:
@@ -35,10 +36,11 @@ const NewsNavigation = () => {
         tabBarIcon: ({ color }) => CustomTabBarIcon(route, color)
       })}
     >
-      <Tab.Screen name='Home' component={Home} />
+      <Tab.Screen name='HomeStack' component={HomeStack} />
       <Tab.Screen name='Explore' component={CreateNews} />
-      <Tab.Screen name='Bookmark' component={Bookmark} />
-      <Tab.Screen name='Profile' component={Profile} />
+      {/* <Tab.Screen name='Bookmark' component={Bookmark} /> */}
+      <Tab.Screen name='Bookmark' component={Detail} />
+      <Tab.Screen name='ProfileStack' component={ProfileStack} />
     </Tab.Navigator>
   )
 }

@@ -2,20 +2,20 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import moment from 'moment'
 
-const Latest = ({ thumb, title, avatar, author, time }) => {
-    const DefaultAvatar = () => {
-        return (
-            <View style={[myStyle.authorAvatar, { backgroundColor: 'gray' }]}></View>
-        )
-    }
 
+const DefaultAvatar = () => {
+    return (
+        <View style={[myStyle.authorAvatar, { backgroundColor: 'gray' }]}></View>
+    )
+}
+const Latest = ({ thumb, title, avatar, author, time, onPress = function () { } }) => {
     const parseTime = (timeString) => {
         const parsedTime = moment(timeString);
         return parsedTime.fromNow();
     }
 
     return (
-        <TouchableOpacity style={myStyle.container}>
+        <TouchableOpacity onPress={onPress} style={myStyle.container}>
             <Image style={myStyle.thumbnail} source={thumb} />
             <View style={{ flex: 1, justifyContent: 'space-between' }}>
                 <Text style={myStyle.fontNationality}>Europe</Text>

@@ -1,52 +1,94 @@
-import { StyleSheet, Text, View, Image, Pressable } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity, ScrollView } from 'react-native'
+import React, { useEffect } from 'react'
+import moment from 'moment'
+import { getNewsById } from '../../../services/NewsService';
+import Lottie from 'lottie-react-native';
 
-const Detail = () => {
+import loadingAnimation from '../../../assets/lottie/98288-loading.json'
+
+const parseTime = (timeString) => {
+    const parsedTime = moment(timeString);
+    return parsedTime.fromNow();
+}
+
+const Detail = (props) => {
+    const { navigation, route } = props;
+    const { id, createdBy } = route.params;
+
+    const [loading, setLoading] = React.useState(false);
+    const [thumbUrl, setThumbUrl] = React.useState(null);
+    const [avatarAuthor, setAvatarAuthor] = React.useState(null);
+    const [nameAuthor, setNameAuthor] = React.useState('');
+    const [publishTime, setPublishTime] = React.useState('');
+    const [title, setTitle] = React.useState('');
+    const [content, setContent] = React.useState('');
+
+
+    useEffect(() => {
+        (async function () {
+            setLoading(true);
+            const res = await getNewsById(id);
+            if (res?.statusCode === 200) {
+                const { createdAt, title, content, image } = res.data[0];
+                setThumbUrl(image);
+                setAvatarAuthor(createdBy.avatar);
+                setNameAuthor(createdBy.name);
+                setPublishTime(createdAt);
+                setTitle(title);
+                setContent(content);
+            }
+            setLoading(false);
+        })()
+    }, [])
+
+
     return (
         <View style={detailStyles.body}>
             <View style={detailStyles.toolbar}>
-                <Image style={detailStyles.backIcon} source={require('../../../media/backpress.png')}></Image>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Image style={detailStyles.backIcon} source={require('../../../assets/icon/arrow_left.png')} />
+                </TouchableOpacity>
                 <View style={detailStyles.shareContainer}>
-                    <Image style={detailStyles.shareIcon} source={require('../../../media/link_icon.png')}></Image>
-                    <Image style={detailStyles.backIcon} source={require('../../../media/dot_icon_vertical.png')}></Image>
+                    <Image source={require('../../../assets/icon/more_options.png')} />
                 </View>
             </View>
-            <View style={detailStyles.followContainer}>
-                <View style={detailStyles.followTitleContainer}>
-                    <Image style={detailStyles.bbcnewIcon} source={require('../../../media/bbc_logo.png')}></Image>
-                    <View style={detailStyles.followTitle}>
-                        <Text style={detailStyles.followTitleBBC}>BBC News</Text>
-                        <Text style={detailStyles.followTitleTime}>14m ago</Text>
+            {loading ? <Lottie source={loadingAnimation} autoPlay loop /> : (<View>
+                <View style={detailStyles.followContainer}>
+                    <View style={detailStyles.authorInfoContainer}>
+                        <Image style={detailStyles.authorAvatar} source={{ uri: avatarAuthor }}></Image>
+                        <View style={detailStyles.followTitle}>
+                            <Text style={detailStyles.authorName}>{nameAuthor}</Text>
+                            <Text style={detailStyles.publishTime}>{parseTime(publishTime)}</Text>
+                        </View>
                     </View>
-                </View>
-                <Pressable style={detailStyles.buttonFollowing}>
-                    <Text style={detailStyles.buttonFollowingLabel}>Following</Text>
-                </Pressable>
-            </View >
-            <Image style={detailStyles.imgDetail} source={require('../../../media/ukraine_president.png')}></Image>
-            <View style={detailStyles.titleContainer}>
-                <Text style={detailStyles.titleEurope}>Europe</Text>
-                <Text style={detailStyles.titleUkraine}>Ukraine's President Zelensky to BBC: Blood money being paid for Russian oil</Text>
-            </View>
-            <Text style={detailStyles.content}>Ukrainian President Volodymyr Zelensky has accused European countries that continue to buy Russian oil of "earning their money in other people's blood". 
-                {'\n\n'}
-                In an interview with the BBC, President Zelensky singled out Germany and Hungary, accusing them of blocking efforts to embargo energy sales, from which Russia stands to make up to £250bn ($326bn) this year.
-            </Text>
-            <View style={detailStyles.bottomContainer}>
-                <View style={detailStyles.likeContainer}>
-                    <View style={detailStyles.like}>
-                        <Image style={detailStyles.backIcon} source={require('../../../media/heart_icon.png')}></Image>
-                        <Text style={detailStyles.likeNumber}>24.5k</Text>
+                    <Pressable style={detailStyles.buttonFollowing}>
+                        <Text style={detailStyles.buttonFollowingLabel}>Following</Text>
+                    </Pressable>
+                </View >
+                <ScrollView showsVerticalScrollIndicator={false}>
+                    <Image style={detailStyles.imgDetail} source={{ uri: thumbUrl }}></Image>
+                    <View style={detailStyles.titleContainer}>
+                        <Text style={detailStyles.titleEurope}>Europe</Text>
+                        <Text style={detailStyles.titleUkraine}>{title}</Text>
                     </View>
-                    <View style={detailStyles.like}>
-                        <Image style={detailStyles.backIcon} source={require('../../../media/comment_icon.png')}></Image>
-                        <Text style={detailStyles.likeNumber}>1k</Text>
+                    <Text style={detailStyles.content}>{content}</Text>
+                    <View style={detailStyles.bottomContainer}>
+                        <View style={detailStyles.likeContainer}>
+                            <View style={detailStyles.like}>
+                                <Image style={detailStyles.backIcon} source={require('../../../assets/icon/favorite.png')}></Image>
+                                <Text style={detailStyles.likeNumber}>24.5k</Text>
+                            </View>
+                            <View style={detailStyles.like}>
+                                <Image style={detailStyles.backIcon} source={require('../../../assets/icon/comment.png')}></Image>
+                                <Text style={detailStyles.likeNumber}>1k</Text>
+                            </View>
+                        </View>
+                        <View style={detailStyles.like}>
+                            <Image style={detailStyles.backIcon} source={require('../../../assets/icon/bookmark.png')}></Image>
+                        </View>
                     </View>
-                </View>
-                <View style={detailStyles.like}>
-                    <Image style={detailStyles.backIcon} source={require('../../../media/bookmark_icon.png')}></Image>
-                </View>
-            </View>
+                </ScrollView>
+            </View>)}
         </View>
     )
 }
@@ -85,7 +127,7 @@ const detailStyles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginTop: 20,
-        
+
     },
     titleUkraine: {
         fontWeight: '400',
@@ -107,7 +149,8 @@ const detailStyles = StyleSheet.create({
     },
     imgDetail: {
         marginTop: 20,
-        width: '100%'
+        height: 250,
+        borderRadius: 6
     },
     buttonFollowingLabel: {
         fontWeight: '600',
@@ -126,14 +169,14 @@ const detailStyles = StyleSheet.create({
         backgroundColor: '#1877F2',
         borderRadius: 6,
     },
-    followTitleTime: {
+    publishTime: {
         fontWeight: '400',
         fontSize: 14,
         lineHeight: 21,
         letterSpacing: 0.12,
         color: '#4E4B66'
     },
-    followTitleBBC: {
+    authorName: {
         fontWeight: '600',
         fontSize: 16,
         lineHeight: 24,
@@ -141,16 +184,19 @@ const detailStyles = StyleSheet.create({
         color: '#000000'
     },
     followTitle: {
-        marginLeft: 5,
+        marginLeft: 10,
         flexDirection: 'column',
         alignItems: 'flex-start'
     },
-    followTitleContainer: {
+    authorInfoContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center'
     },
-    bbcnewIcon: {
+    authorAvatar: {
+        width: 50,
+        height: 50,
+        borderRadius: 50
     },
     followContainer: {
         marginTop: 15,
@@ -168,8 +214,8 @@ const detailStyles = StyleSheet.create({
         alignItems: 'flex-start'
     },
     backIcon: {
-        width: 24,
-        height: 24
+        width: 16,
+        height: 16
     },
     toolbar: {
         flexDirection: 'row',
@@ -178,8 +224,7 @@ const detailStyles = StyleSheet.create({
     },
     body: {
         padding: 24,
-        backgroundColor: 'while',
-        width: '100%',
-        height: '100%'
+        backgroundColor: 'white',
+        flex: 1
     },
 })

@@ -1,3 +1,4 @@
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import AxiosInstance from "../utils/helpers/AxiosInstance";
 
 
@@ -25,6 +26,16 @@ export const getMyNews = async () => {
 export const createNews = async (title , content, image = null) => {
     try {
         const response = await AxiosInstance().post('/articles', { title, content, image });
+        return response;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+export const getNewsById = async (id) => {
+    try {
+        const response = await AxiosInstance().get(`/articles/${id}/detail`);
         return response;
     }
     catch (error) {

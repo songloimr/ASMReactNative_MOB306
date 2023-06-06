@@ -19,6 +19,7 @@ const Home = (props) => {
         const { item } = value;
         return (
             <Latest
+                onPress={() => props.navigation.navigate('Detail', { id: item._id,  createdBy : item.createdBy})}
                 thumb={{ uri: item.image }}
                 title={item.title}
                 avatar={{ uri: item.createdBy.avatar }}
