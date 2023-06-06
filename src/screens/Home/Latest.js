@@ -1,26 +1,34 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
 import React from 'react'
+import moment from 'moment'
 
-const Latest = ({thumb, topic, title, avatar, author, time}) => {
+const Latest = ({ thumb, title, avatar, author, time }) => {
+    const DefaultAvatar = () => {
+        return (
+            <View style={[myStyle.authorAvatar, { backgroundColor: 'gray' }]}></View>
+        )
+    }
+
+    const parseTime = (timeString) => {
+        const parsedTime = moment(timeString);
+        return parsedTime.fromNow();
+    }
+
     return (
-        <View style={myStyle.itemLatest}>
-            <Image style={myStyle.newsImage}
-                source={thumb} />
-            <View style={myStyle.contentLatest}>
-                <Text style={myStyle.fontNationality}>{topic}</Text>
-                <Text 
-                numberOfLines={2}
-                style={myStyle.fontTitleTrending}>
-                    {title}
-                </Text>
-                <View style={myStyle.infomation}>
-                    <View style={myStyle.infomationA} >
-                        <Image style={myStyle.logoNews}
-                            source={avatar} />
-                        <Text style={myStyle.fontNewsName}>{author}</Text>
-                        <Image style={myStyle.logoTime}
-                            source={require('../../assets/images/logoTime.png')} />
-                        <Text style={myStyle.fontTime}>{time}</Text>
+        <View style={myStyle.container}>
+            <Image style={myStyle.thumbnail} source={thumb} />
+            <View style={{ flex: 1, justifyContent: 'space-between' }}>
+                <Text style={myStyle.fontNationality}>Europe</Text>
+                <Text numberOfLines={2} style={myStyle.fontTitleTrending}>{title}</Text>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
+                    <View style={{ flexDirection: 'row' }} >
+                        {!!avatar.uri ? <Image style={myStyle.authorAvatar} source={avatar} /> : <DefaultAvatar />}
+                        <Text style={myStyle.authorName}>{author}</Text>
+                        <Image style={myStyle.logoTime} source={require('../../assets/images/logoTime.png')} />
+                        <Text style={myStyle.fontTime}>{parseTime(time)}</Text>
                     </View>
                     <Image style={myStyle.dotIcon}
                         source={require('../../assets/images/3dot_Icon.png')} />
@@ -33,12 +41,13 @@ const Latest = ({thumb, topic, title, avatar, author, time}) => {
 export default Latest
 
 const myStyle = StyleSheet.create({
-    contentLatest: {
-        // backgroundColor:'red',
-        width:'70%',
-    },
-
-    newsImage: {
+    authorAvatar: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+    }
+    ,
+    thumbnail: {
         width: 96,
         height: 96,
         borderColor: '#C4C4C4',
@@ -46,8 +55,7 @@ const myStyle = StyleSheet.create({
         backgroundColor: '#C4C4C4',
         marginRight: 4,
     },
-    itemLatest: {
-
+    container: {
         marginBottom: 16,
         flexDirection: 'row',
         // width:'100%',
@@ -74,30 +82,12 @@ const myStyle = StyleSheet.create({
         marginTop: 4.17,
     },
 
-    fontNewsName: {
-        fontFamily: 'Arial',
+    authorName: {
         fontWeight: '600',
         fontSize: 13,
-        lineHeight: 20,
-        letterSpacing: 0.12,
         color: '#4E4B66',
         marginLeft: 4,
         marginRight: 13.17,
-        // backgroundColor:'red'
-    },
-
-    logoNews: {
-    },
-
-    infomationA: {
-        flexDirection: 'row',
-        // justifyContent: 'space-between',
-        // backgroundColor:'red'
-    },
-
-    infomation: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
         // backgroundColor:'red'
     },
     fontTitleTrending: {

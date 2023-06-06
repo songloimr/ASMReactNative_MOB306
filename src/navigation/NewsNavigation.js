@@ -6,7 +6,8 @@ const Tab = createBottomTabNavigator();
 import Home from '../screens/Home';
 import Explore from '../screens/Home/Explore';
 import Bookmark from '../screens/Home/Bookmark';
-import Profile from '../screens/Users/Profile'; 
+import Profile from '../screens/Users/Profile';
+import CreateNews from '../screens/Users/CreateNews';
 
 const NewsNavigation = () => {
   return (
@@ -14,7 +15,7 @@ const NewsNavigation = () => {
       //custom icon
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarIcon: ({ focused, color, size }) => {
+        tabBarIcon: ({ color }) => {
           let icon = require('../assets/images/bottomnavigation_home.png')
           switch (route.name) {
             case 'Explore':
@@ -34,7 +35,7 @@ const NewsNavigation = () => {
       })}
     >
       <Tab.Screen name='Home' component={Home} />
-      <Tab.Screen name='Explore' component={Explore} />
+      <Tab.Screen name='Explore' component={CreateNews} />
       <Tab.Screen name='Bookmark' component={Bookmark} />
       <Tab.Screen name='Profile' component={Profile} />
     </Tab.Navigator>

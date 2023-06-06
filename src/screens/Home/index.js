@@ -20,7 +20,6 @@ const Home = (props) => {
         return (
             <Latest
                 thumb={{ uri: item.image }}
-                topic={item.topic}
                 title={item.title}
                 avatar={{ uri: item.createdBy.avatar }}
                 author={item.createdBy.name}
