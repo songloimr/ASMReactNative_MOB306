@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image, Pressable } from 'react-native'
+import { StyleSheet, View, TextInput, Image, Pressable } from 'react-native'
 import React, {useState} from 'react'
 
 import iconShowPassword from '../assets/images/eye.jpg';

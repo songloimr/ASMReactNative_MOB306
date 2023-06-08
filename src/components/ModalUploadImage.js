@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Modal, Pressable, TouchableOpacity, Image } from 'react-native'
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 import { uploadImage } from '../services/NewsService'
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
 import Lottie from 'lottie-react-native';
@@ -43,7 +43,6 @@ const ModalUploadImage = ({ controlModal, onImageSelected = (e) => {} , onUpload
             formData.append('image', { uri, name, type })
             setIsUploading(true)
             const { data: resUpload } = await uploadImage(formData)
-            console.log(resUpload)
             setIsUploading(false)
             onUploaded(resUpload.path)
         }

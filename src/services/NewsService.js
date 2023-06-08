@@ -1,4 +1,4 @@
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { Share } from "react-native";
 import AxiosInstance from "../utils/helpers/AxiosInstance";
 
 
@@ -23,7 +23,7 @@ export const getMyNews = async () => {
     }
 }
 
-export const createNews = async (title , content, image = null) => {
+export const createNews = async (title, content, image = null) => {
     try {
         const response = await AxiosInstance().post('/articles', { title, content, image });
         return response;
@@ -45,7 +45,7 @@ export const getNewsById = async (id) => {
 
 export const uploadImage = async (form) => {
     try {
-        const response = await AxiosInstance( 'multipart/form-data').post('/media/upload', form);
+        const response = await AxiosInstance('multipart/form-data').post('/media/upload', form);
         return response;
     }
     catch (error) {
@@ -70,5 +70,24 @@ export const searchNews = async (keyword) => {
     }
     catch (error) {
         console.log(error);
+    }
+}
+
+export const shareNews = async ({
+    message = 'React Native | A framework for building native apps using React',
+    title = 'React Native',
+    onShared = () => { }
+}) => {
+    try {
+        const result = await Share.share({ message, title }, {
+            dialogTitle: 'Chia sẻ bài viết'
+        });
+        if (result.action === Share.sharedAction) {
+            onShared();
+        } else if (result.action === Share.dismissedAction) {
+            // dismissed
+        }
+    } catch (error) {
+        console.error(error.message);
     }
 }

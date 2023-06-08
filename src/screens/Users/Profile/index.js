@@ -8,7 +8,7 @@ import { getMyNews } from '../../../services/NewsService';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { UserContext } from '../../../contexts/UserContext';
 
-import Latest from '../../Home/Latest';
+import Latest from '../../../components/NewsItem';
 import Lottie from 'lottie-react-native';
 import loadingNewsAnimation from '../../../assets/lottie/98770-loading-news.json'
 
@@ -26,7 +26,7 @@ const ThongKe = ({ title, subTitle }) => {
 const renderItem = ({ item }, navigation) => {
   return (
     <Latest
-      onPress={() => navigation.navigate('HomeStack', {
+      onPress={() => navigation.navigate('Home', {
         screen: 'Detail',
         params: { id: item._id, createdBy: item.createdBy }
       })}

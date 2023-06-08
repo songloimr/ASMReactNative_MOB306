@@ -35,10 +35,10 @@ const NewsNavigation = () => {
         tabBarIcon: ({ color }) => CustomTabBarIcon(route, color)
       })}
     >
-      <Tab.Screen name='HomeStack' component={HomeStack} />
+      <Tab.Screen name='Home' component={HomeStack} />
       <Tab.Screen name='Explore' component={Explore} />
       <Tab.Screen name='Bookmark' component={Bookmark} />
-      <Tab.Screen name='ProfileStack' component={ProfileStack} />
+      <Tab.Screen name='Profile' component={ProfileStack} />
     </Tab.Navigator>
   )
 }

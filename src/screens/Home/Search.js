@@ -3,7 +3,7 @@ import {
     TextInput, View, TouchableOpacity, FlatList
 } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import Latest from './Latest'
+import Latest from '../../components/NewsItem'
 import { searchNews } from '../../services/NewsService'
 import Lottie from 'lottie-react-native';
 import SearchingAnimation from '../../assets/lottie/130477-searching.json'
@@ -28,7 +28,7 @@ const Search = (props) => {
         if (text.length > 0) {
             timer = setTimeout(() => {
                 searchByTitle(text)
-            }, 1000);
+            }, 900);
         }
         return () => clearTimeout(timer)
     }, [text])

@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, ScrollView, FlatList, Pressable } from '
 import React, { useState, useEffect } from 'react'
 import { getNews } from '../../services/NewsService'
 import Trending from './Trending'
-import Latest from './Latest'
+import Latest from '../../components/NewsItem'
 
 const Home = (props) => {
     useEffect(() => {
@@ -25,15 +25,18 @@ const Home = (props) => {
             />
         )
     }
+    
+    
+    // res.data.forEach(async news => {
+    //     await deleteNews(news._id);
+    // });
 
     const getNewsData = async () => {
         setLoading(true);
         const res = await getNews();
         if (res?.statusCode === 200) {
             setNews(res.data);
-            // res.data.forEach(async news => {
-            //     await deleteNews(news._id);
-            // });
+
         }
         setLoading(false);
     }

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, Image } from 'react-native'
+import { StyleSheet, View, TextInput, Image } from 'react-native'
 import React from 'react'
 
 const InputText = (props) => {

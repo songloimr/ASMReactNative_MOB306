@@ -1,7 +1,9 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, Modal, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 import { createNews } from '../../../services/NewsService'
 import ModalUploadImage from '../../../components/ModalUploadImage'
+import TopAppBar from '../../../components/TopAppBar'
+
 const ButtonFormat = ({ src }) => {
     return (
         <TouchableOpacity style={{ margin: 8 }}>
@@ -11,7 +13,7 @@ const ButtonFormat = ({ src }) => {
 }
 
 
-const CreateNews = () => {
+const CreateNews = (props) => {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [image, setImage] = useState(null)
@@ -46,7 +48,7 @@ const CreateNews = () => {
 
     const handleUploaded = useCallback((url) => {
         setThumbUrl(url)
-        console.log('thumbUrl: ',url)
+        console.log('thumbUrl: ', url)
     }, [])
 
 
@@ -61,9 +63,12 @@ const CreateNews = () => {
     return (
         <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={styles.container}>
+                <TopAppBar title='Create News'
+                    onPressLeftIcon={() => { props.navigation.goBack() }}
+                    leftIcon={require('../../../assets/icon/arrow_left.png')} />
                 <TouchableOpacity style={styles.btnAddImage} onPress={() => setIsShowModal(!isShowModal)} >
                     {image ? (
-                        <Image style={{ width: '100%', height: '100%' }} source={{ uri: image }} />
+                        <Image style={{ width: '100%', height: '100%' , borderRadius: 6}} source={{ uri: image }} />
                     ) : (
                         <View style={{ alignItems: 'center' }}>
                             <Image style={{ width: 24, height: 24 }} source={require('../../../assets/images/plus.png')} />
@@ -105,7 +110,8 @@ export default CreateNews
 
 const styles = StyleSheet.create({
     container: {
-        paddingHorizontal: 25,
+        paddingTop: 24,
+        paddingHorizontal: 24,
         backgroundColor: 'white',
         flex: 1,
     },

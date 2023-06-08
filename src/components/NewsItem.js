@@ -2,8 +2,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import moment from 'moment'
 
-import icon_clock from '../../assets/images/logoTime.png'
-import more3Dot from '../../assets/images/3dot_Icon.png'
+import icon_clock from '../assets/images/logoTime.png'
+import more3Dot from '../assets/images/3dot_Icon.png'
 
 const Latest = ({ thumb, title, avatar, author, time, onPress = function () { } }) => {
     const parseTime = (timeString) => {

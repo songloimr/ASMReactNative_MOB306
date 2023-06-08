@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import moment from 'moment'
-import { getNewsById } from '../../../services/NewsService';
+import { getNewsById, shareNews } from '../../../services/NewsService';
+import Snackbar from 'react-native-snackbar';
 import Lottie from 'lottie-react-native';
 
 import loadingAnimation from '../../../assets/lottie/98288-loading.json'
@@ -10,6 +11,7 @@ const parseTime = (timeString) => {
     const parsedTime = moment(timeString);
     return parsedTime.fromNow();
 }
+
 
 const Detail = (props) => {
     const { navigation, route } = props;
@@ -41,6 +43,19 @@ const Detail = (props) => {
         })()
     }, [])
 
+    const handleShare = useCallback(async () => {
+        await shareNews({
+            message: title,
+            title: title
+        }, () => {
+            Snackbar.show({
+                text: 'Cập nhật thông tin thành công!',
+                duration: Snackbar.LENGTH_LONG
+            });
+        })
+    }, [])
+
+
 
     return (
         <View style={detailStyles.body}>
@@ -49,7 +64,10 @@ const Detail = (props) => {
                     <Image style={detailStyles.backIcon} source={require('../../../assets/icon/arrow_left.png')} />
                 </TouchableOpacity>
                 <View style={detailStyles.shareContainer}>
-                    <Image source={require('../../../assets/icon/more_options.png')} />
+                    <TouchableOpacity onPress={handleShare}>
+                        <Image style={{ height: 24, width: 24 }} source={require('../../../assets/icon/sharesocial.png')} />
+                    </TouchableOpacity>
+                    <Image style={{ height: 24, width: 24 }} source={require('../../../assets/icon/more.png')} />
                 </View>
             </View>
             {loading ? <Lottie source={loadingAnimation} autoPlay loop /> : (<View>
