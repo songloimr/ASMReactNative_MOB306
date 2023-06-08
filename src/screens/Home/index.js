@@ -1,10 +1,8 @@
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList, Pressable } from 'react-native'
+import { View, Text, StyleSheet, Image, ScrollView, FlatList, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getNews, deleteNews } from '../../services/NewsService'
+import { getNews } from '../../services/NewsService'
 import Trending from './Trending'
 import Latest from './Latest'
-import Lottie from 'lottie-react-native';
-import loadingNewsAnimation from '../../assets/lottie/98770-loading-news.json'
 
 const Home = (props) => {
     useEffect(() => {
@@ -14,15 +12,16 @@ const Home = (props) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const renderItem = (item) => {
+    const renderItem = (value) => {
+        const { item: news } = value;
         return (
             <Latest
-                onPress={() => props.navigation.navigate('Detail', { id: item._id, createdBy: item.createdBy })}
-                thumb={{ uri: item.image }}
-                title={item.title}
-                avatar={{ uri: item.createdBy.avatar }}
-                author={item.createdBy.name}
-                time={item.createdAt}
+                onPress={() => props.navigation.navigate('Detail', { id: news._id, createdBy: news.createdBy })}
+                thumb={{ uri: news.image }}
+                title={news.title}
+                avatar={{ uri: news.createdBy.avatar }}
+                author={news.createdBy.name}
+                time={news.createdAt}
             />
         )
     }
@@ -40,7 +39,7 @@ const Home = (props) => {
     }
 
     return (
-        <ScrollView style={myStyle.body}>
+        <View style={myStyle.body}>
             <View style={myStyle.header}>
                 <Image source={require('../../assets/images/kabar.png')} />
                 <View style={myStyle.notifi_icon}>
@@ -95,7 +94,7 @@ const Home = (props) => {
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item._id} />
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
