@@ -1,6 +1,6 @@
 import {
   StyleSheet, Text,
-  TextInput, View, Image, TouchableHighlight, Dimensions,
+  TextInput, View, Image, TouchableHighlight, Dimensions, TouchableOpacity,
   KeyboardAvoidingView, ScrollView,
 } from 'react-native'
 import React, { useEffect, useState, useContext } from 'react'
@@ -8,9 +8,12 @@ import { updateInfomation } from '../../../services/UserService';
 import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Snackbar from 'react-native-snackbar';
 import { UserContext } from '../../../contexts/UserContext';
+import ModalUploadImage from '../../../components/ModalUploadImage';
+
 const EditProfile = (props) => {
   const { user: currentUser, setUser } = useContext(UserContext);
 
+  const [isShowModal, setIsShowModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
 
@@ -18,21 +21,18 @@ const EditProfile = (props) => {
     if (isSaveClicked) {
       (async function () {
         setIsLoading(true);
-        const res = await updateInfomation({
-          fullName,
-          email,
-          phoneNumber,
-          address
-        });
+        const res = await updateInfomation({ avatar, name: fullName, email, phone: phoneNumber, address });
         if (res?.statusCode === 200) {
-          setUser(currentUser, ...res.data);
+          setUser(res.data);
           Snackbar.show({
             text: 'Cập nhật thông tin thành công!',
-            duration: Snackbar.LENGTH_SHORT,
+            duration: Snackbar.LENGTH_LONG
           });
         }
         setIsLoading(false);
+        setIsSaveClicked(false);
       })()
+
     }
   }, [isSaveClicked])
 
@@ -41,10 +41,10 @@ const EditProfile = (props) => {
   }
 
   const [avatar, setAvatar] = useState(currentUser.avatar);
-  const [fullName, setFullName] = React.useState(currentUser.name);
-  const [email, setEmail] = React.useState(currentUser.email);
-  const [phoneNumber, setPhoneNumber] = React.useState(currentUser.phone);
-  const [address, setAddress] = React.useState(currentUser.address);
+  const [fullName, setFullName] = useState(currentUser.name ?? '');
+  const [email, setEmail] = useState(currentUser.email ?? '');
+  const [phoneNumber, setPhoneNumber] = useState(currentUser.phone ?? '');
+  const [address, setAddress] = useState(currentUser.address ?? '');
 
 
   const { navigation } = props;
@@ -58,16 +58,13 @@ const EditProfile = (props) => {
       <ScrollView>
         <View style={styles.container}>
           <View style={styles.vHeader}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => navigation.goBack()}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
               <Image
                 style={styles.iconBack}
                 source={require('../../../assets/images/tick_x_Icon.png')} />
-            </TouchableHighlight>
+            </TouchableOpacity>
             <Text style={styles.txtHeader}>Edit Profile</Text>
             <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
               onPress={handleSave}>
               <Image
                 style={styles.iconBack}
@@ -78,23 +75,19 @@ const EditProfile = (props) => {
           <View style={styles.avatarContainer}>
             <Image
               style={styles.imgAvatar}
-              source={{ uri: currentUser.avatar }} />
-            <TouchableHighlight
-              style={styles.iconEditAvatar}
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                source={require('../../../assets/images/Frame.png')} />
+              source={{ uri: avatar }} />
+            <TouchableHighlight style={styles.iconEditAvatar} onPress={() => setIsShowModal(!isShowModal)}>
+              <Image source={require('../../../assets/images/Frame.png')} />
             </TouchableHighlight>
           </View>
+          <ModalUploadImage controlModal={[isShowModal, setIsShowModal]} onUploaded={setAvatar} />
 
           <View style={styles.vbody}>
-
             <View style={styles.vbodyItem}>
               <Text style={styles.txtTitle}>Full Name</Text>
               <TextInput
-                onEndEditing={(e) => setFullName(e.nativeEvent.text)}
                 value={fullName}
+                onChangeText={(text) => setFullName(text)}
                 style={styles.txtInput}
                 placeholder="Enter your Full Name "
                 placeholderTextColor="grey"
@@ -109,7 +102,7 @@ const EditProfile = (props) => {
               </View>
               <TextInput
                 value={email}
-                onEndEditing={(e) => setEmail(e.nativeEvent.text)}
+                onChangeText={(text) => setEmail(text)}
                 style={styles.txtInput}
                 placeholder="Enter your Email Address*"
                 placeholderTextColor="grey"
@@ -124,7 +117,7 @@ const EditProfile = (props) => {
               </View>
               <TextInput
                 value={phoneNumber}
-                onEndEditing={(e) => setPhoneNumber(e.nativeEvent.text)}
+                onChangeText={(text) => setPhoneNumber(text)}
                 style={styles.txtInput}
                 placeholder="Enter your Phone Number*"
                 placeholderTextColor="grey"
@@ -136,6 +129,7 @@ const EditProfile = (props) => {
               <Text style={styles.txtTitle}>Address</Text>
               <TextInput
                 value={address}
+                onChangeText={(text) => setAddress(text)}
                 style={styles.txtInput}
                 placeholder="Enter your Address"
                 placeholderTextColor="grey"

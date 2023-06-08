@@ -1,9 +1,7 @@
-import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, Modal } from 'react-native'
+import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, SafeAreaView, Modal, Pressable } from 'react-native'
 import React, { useState, useEffect, useCallback } from 'react'
 import { createNews } from '../../../services/NewsService'
-import { launchImageLibrary, launchCamera } from 'react-native-image-picker';
-
-
+import ModalUploadImage from '../../../components/ModalUploadImage'
 const ButtonFormat = ({ src }) => {
     return (
         <TouchableOpacity style={{ margin: 8 }}>
@@ -17,13 +15,15 @@ const CreateNews = () => {
     const [title, setTitle] = useState('')
     const [content, setContent] = useState('')
     const [image, setImage] = useState(null)
+    const [thumbUrl, setThumbUrl] = useState(null)
     const [publishClicked, setPublishClicked] = useState(false)
     const [canPublish, setCanPublish] = useState(false)
     const [isShowModal, setIsShowModal] = useState(false)
+
     useEffect(() => {
         if (publishClicked) {
             (async function () {
-                const res = await createNews(title, content, image);
+                const res = await createNews(title, content, thumbUrl);
                 if (res?.statusCode === 200) {
                     console.log(res.data)
                     resetForm();
@@ -36,9 +36,19 @@ const CreateNews = () => {
         setCanPublish(title.length > 5 && content.length > 10)
     }, [title, content])
 
-    const handlePublish = async () => {
+    const handlePublish = useCallback(() => {
         setPublishClicked(true)
-    }
+    })
+
+    const handleImageSelected = useCallback((uri) => {
+        setImage(uri)
+    }, [])
+
+    const handleUploaded = useCallback((url) => {
+        setThumbUrl(url)
+        console.log('thumbUrl: ',url)
+    }, [])
+
 
     const resetForm = () => {
         setTitle('');
@@ -61,39 +71,7 @@ const CreateNews = () => {
                         </View>
                     )}
                 </TouchableOpacity>
-
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={isShowModal}
-                    onRequestClose={() => {
-                        setIsShowModal(!isShowModal);
-                    }}>
-                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
-                        <View style={{ backgroundColor: 'white', width: '90%', height: '50%', borderRadius: 6, padding: 16, flexDirection: 'row', justifyContent: 'space-evenly', alignItems: 'center' }}>
-                            <TouchableOpacity style={{width: 35,height: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => setIsShowModal(false)}>
-                            <Image source={require('../../../assets/images/back1.png')}></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{height: 35, width: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => launchImageLibrary({ mediaType: 'photo' }, (res) => {
-                                if (res?.assets?.[0]?.uri) {
-                                    setImage(res.assets[0].uri)
-                                }
-                                setIsShowModal(false)
-                            })}>
-                                <Image source={require('../../../assets/images/image-gallery.png')}></Image>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{width: 35, height: 35, backgroundColor: '#1877F2', borderRadius: 50, justifyContent: 'center', alignItems: 'center'}} onPress={() => launchCamera({ mediaType: 'photo' }, (res) => {
-                                if (res?.assets?.[0]?.uri) {
-                                    setImage(res.assets[0].uri)
-                                }
-                                setIsShowModal(false)
-                            })}>
-                                <Image source={require('../../../assets/images/photo-camera.png')}></Image>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </Modal>
-
+                <ModalUploadImage controlModal={[isShowModal, setIsShowModal]} onImageSelected={handleImageSelected} onUploaded={handleUploaded} />
                 <TextInput multiline
                     onChangeText={(text) => setTitle(text)}
                     placeholder='News title' style={styles.inputTitle} value={title} />

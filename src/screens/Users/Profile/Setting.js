@@ -1,135 +1,74 @@
 import {
   StyleSheet, Text, View, Image,
-  TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+
+import { UserContext } from '../../../contexts/UserContext';
+import arrowRight from '../../../assets/images/arrow_mini_icon.png'
+
+const ItemMenu = ({ title, icon, onPress = () => { } }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <View style={styles.vbodyItem}>
+        <View style={styles.vtitle}>
+          <Image
+            style={styles.itemMenuIcon}
+            source={icon} />
+          <Text style={styles.txtTitle}>{title}</Text>
+        </View>
+        <Image style={styles.arrowIcon} source={arrowRight} />
+      </View>
+    </TouchableOpacity>
+  )
+}
 
 const Setting = (props) => {
+  //user context
+  const { setUser } = useContext(UserContext);
+
   const { navigation } = props;
   return (
     <View style={styles.container}>
 
       <View style={styles.vHeader}>
-        <TouchableHighlight
-          underlayColor={'rgba(0, 0, 0, 0)'}
+        <TouchableOpacity
           onPress={() => navigation.goBack()}>
-          <Image
-            style={styles.iconBack}
-            source={require('../../../assets/images/backpress.png')} />
-        </TouchableHighlight>
+          <Image style={styles.iconBack} source={require('../../../assets/images/backpress.png')} />
+        </TouchableOpacity>
         <Text style={styles.txtHeader}>Settings</Text>
-        <Text style={{ width: 24 }}></Text>
+        <View />
       </View>
 
       <View style={styles.vbody}>
-
+        <ItemMenu
+          title="Notification"
+          icon={require('../../../assets/images/notifi_icon2.png')}
+          onPress={() => { }}
+        />
+        <ItemMenu
+          title="Security"
+          icon={require('../../../assets/images/security_Icon.png')}
+          onPress={() => { }}
+        />
+        <ItemMenu
+          title="Help"
+          icon={require('../../../assets/images/help_Icon.png')}
+          onPress={() => { }}
+        />
         <View style={styles.vbodyItem}>
-
           <View style={styles.vtitle}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                style={styles.iconTitle}
-                source={require('../../../assets/images/notifi_icon2.png')} />
-            </TouchableHighlight>
-            <Text style={styles.txtTitle}>Notification</Text>
-          </View>
-
-          <TouchableHighlight
-            underlayColor={'rgba(0, 0, 0, 0)'}
-            onPress={() => { }}>
-            <Image
-              style={styles.arrowIcon}
-              source={require('../../../assets/images/arrow_mini_icon.png')} />
-          </TouchableHighlight>
-
-        </View>
-
-        <View style={styles.vbodyItem}>
-
-          <View style={styles.vtitle}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                style={styles.iconTitle}
-                source={require('../../../assets/images/security_Icon.png')} />
-            </TouchableHighlight>
-            <Text style={styles.txtTitle}>Security</Text>
-          </View>
-
-          <TouchableHighlight
-            underlayColor={'rgba(0, 0, 0, 0)'}
-            onPress={() => { }}>
-            <Image
-              style={styles.arrowIcon}
-              source={require('../../../assets/images/arrow_mini_icon.png')} />
-          </TouchableHighlight>
-
-        </View>
-
-        <View style={styles.vbodyItem}>
-
-          <View style={styles.vtitle}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                style={styles.iconTitle}
-                source={require('../../../assets/images/help_Icon.png')} />
-            </TouchableHighlight>
-            <Text style={styles.txtTitle}>Help</Text>
-          </View>
-
-          <TouchableHighlight
-            underlayColor={'rgba(0, 0, 0, 0)'}
-            onPress={() => { }}>
-            <Image
-              style={styles.arrowIcon}
-              source={require('../../../assets/images/arrow_mini_icon.png')} />
-          </TouchableHighlight>
-
-        </View>
-
-        <View style={styles.vbodyItem}>
-
-          <View style={styles.vtitle}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                style={styles.iconTitle}
-                source={require('../../../assets/images/darkmode_Icon.png')} />
-            </TouchableHighlight>
+              <Image style={styles.itemMenuIcon} source={require('../../../assets/images/darkmode_Icon.png')} />
             <Text style={styles.txtTitle}>Dark Mode</Text>
           </View>
-
-          <TouchableHighlight
-            underlayColor={'rgba(0, 0, 0, 0)'}
-            onPress={() => { }}>
-            <Image
-              style={styles.arrowIcon}
-              source={require('../../../assets/images/Toggle.png')} />
-          </TouchableHighlight>
+          <Image style={styles.arrowIcon} source={require('../../../assets/images/Toggle.png')} />
 
         </View>
-
-        <View style={styles.vbodyItem}>
-
-          <View style={styles.vtitle}>
-            <TouchableHighlight
-              underlayColor={'rgba(0, 0, 0, 0)'}
-              onPress={() => { }}>
-              <Image
-                style={styles.iconTitle}
-                source={require('../../../assets/images/logout_Icon.png')} />
-            </TouchableHighlight>
-            <Text style={styles.txtTitle}>Logout</Text>
-          </View>
-
-        </View>
-
+        <ItemMenu
+          title="Log Out"
+          icon={require('../../../assets/images/logout_Icon.png')}
+          onPress={() => setUser(null)}
+        />
       </View>
 
     </View>
@@ -154,7 +93,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.12,
     color: '#000000',
   },
-  iconTitle: {
+  itemMenuIcon: {
     marginRight: 10,
   },
   vtitle: {

@@ -21,7 +21,6 @@ import MainProfile from './src/screens/Users/Profile';
 import EditProfile from './src/screens/Users/Profile/EditProfile';
 
 function App(): JSX.Element {
-
   return (
     <SafeAreaView style={styles.body}>
       <UserProvider>
@@ -29,9 +28,6 @@ function App(): JSX.Element {
           <AppNavigation/>
         </NewsProvider>
       </UserProvider>
-      {/* <Setting/> */}
-      {/* <EditProfile/> */}
-      {/* <Profile/> */}
     </SafeAreaView>
   );
 }

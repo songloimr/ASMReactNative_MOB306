@@ -1,24 +1,18 @@
-import {
-  StyleSheet, Text,
-  View, TextInput, Pressable, Image,
-  TouchableHighlight, ScrollView, KeyboardAvoidingView, Alert
-} from 'react-native'
-import React, { useState, useContext } from 'react'
+import { StyleSheet, Text, View, Pressable, Image, ScrollView, KeyboardAvoidingView, Alert, Button } from 'react-native'
+import React, { useState, useContext, useEffect, useCallback } from 'react'
 import { UserContext } from '../../../contexts/UserContext';
 import InputPassword from '../../../components/InputPassword';
 import InputText from '../../../components/InputText';
 import Spinner from 'react-native-loading-spinner-overlay';
-
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 
 const Login = (props) => {
   const { navigation } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [isShowPassword, setIsShowPassword] = useState(false)
 
   const [email, setEmail] = useState('tomheo11233@gmail.com')
   const [password, setPassword] = useState('tomheo11233')
-
   const { onLogin } = useContext(UserContext);
 
   const onLoginPress = async () => {
@@ -31,8 +25,39 @@ const Login = (props) => {
       setPassword('');
     }
   }
+  useEffect(() => {
+    GoogleSignin.configure();
+  }, [])
+
+  const signInGoogle = useCallback(async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      await GoogleSignin.signOut();
+      const userInfo = await GoogleSignin.signIn();
+      console.log('google login userInfo:', userInfo)
+    } catch (error) {
+      switch (error.code) {
+        case statusCodes.SIGN_IN_CANCELLED:
+          console.log('SIGN_IN_CANCELLED')
+          // sign in was cancelled
+          break;
+        case statusCodes.IN_PROGRESS:
+          console.log('IN_PROGRESS')
+          // operation (e.g. sign in) already in progress
+          break;
+        case statusCodes.PLAY_SERVICES_NOT_AVAILABLE:
+          console.log('PLAY_SERVICES_NOT_AVAILABLE')
+          // android only
+          break;
+        default:
+          // some other error happened
+          console.error('signInGoogle', error);
+      }
+    }
+  })
+
+
   return (
-    // dung de day man hinh len khi typing
     <KeyboardAvoidingView style={loginstyles.body}>
       <Spinner
         visible={isLoading}
@@ -48,8 +73,8 @@ const Login = (props) => {
           <View style={loginstyles.usernameContainer}>
             <Text style={loginstyles.usernameLabel}>Email*</Text>
             <InputText
-              keyboardType='email-address'
               value={email}
+              keyboardType='email-address'
               onChangeText={text => setEmail(text)}
             />
           </View>
@@ -84,7 +109,7 @@ const Login = (props) => {
             </View>
 
             <View style={loginstyles.loginGoogleContainer}>
-              <Pressable style={loginstyles.buttonLoginGoogle}>
+              <Pressable style={loginstyles.buttonLoginGoogle} onPress={signInGoogle}>
                 <Image source={require('../../../assets/images/G.png')}></Image>
                 <Text style={loginstyles.loginGoogleLabel}>Google</Text>
               </Pressable>
@@ -148,7 +173,6 @@ const loginstyles = StyleSheet.create({
     height: 48,
     width: 160,
     flexDirection: 'row',
-    alignItems: 'center',
     paddingVertical: 13,
     paddingHorizontal: 24,
 
