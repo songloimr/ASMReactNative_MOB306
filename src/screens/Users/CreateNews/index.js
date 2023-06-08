@@ -61,14 +61,14 @@ const CreateNews = (props) => {
 
 
     return (
-        <SafeAreaView style={{ backgroundColor: 'white', flex: 1 }}>
+        <View style={{ backgroundColor: 'white', flex: 1 }}>
             <View style={styles.container}>
                 <TopAppBar title='Create News'
                     onPressLeftIcon={() => { props.navigation.goBack() }}
                     leftIcon={require('../../../assets/icon/arrow_left.png')} />
                 <TouchableOpacity style={styles.btnAddImage} onPress={() => setIsShowModal(!isShowModal)} >
                     {image ? (
-                        <Image style={{ width: '100%', height: '100%' , borderRadius: 6}} source={{ uri: image }} />
+                        <Image style={{ width: '100%', height: '100%', borderRadius: 6 }} source={{ uri: image }} />
                     ) : (
                         <View style={{ alignItems: 'center' }}>
                             <Image style={{ width: 24, height: 24 }} source={require('../../../assets/images/plus.png')} />
@@ -102,7 +102,7 @@ const CreateNews = (props) => {
                     <Text style={[{ margin: 14, fontWeight: '600' }, canPublish && { color: '#fff' }]}>Publish</Text>
                 </TouchableOpacity>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
@@ -132,7 +132,10 @@ const styles = StyleSheet.create({
         height: 180,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#EEF1F4'
+        backgroundColor: '#EEF1F4',
+        borderWidth: 1.5,
+        borderColor: '#4E4B66',
+        borderStyle: 'dashed',
     },
     formatBar: {
         position: 'absolute',
