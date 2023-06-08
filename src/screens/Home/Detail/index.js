@@ -31,8 +31,8 @@ const Detail = (props) => {
             if (res?.statusCode === 200) {
                 const { createdAt, title, content, image } = res.data[0];
                 !!image && setThumbUrl(image);
-                !!createdBy.avatar && setAvatarAuthor(createdBy.avatar);
-                setNameAuthor(createdBy.name);
+                !!createdBy?.avatar && setAvatarAuthor(createdBy.avatar);
+                setNameAuthor(createdBy?.name ?? 'Anonymous');
                 setPublishTime(createdAt);
                 setTitle(title);
                 setContent(content);

@@ -1,10 +1,10 @@
-import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList } from 'react-native'
+import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { getNews } from '../../services/NewsService'
+import { getNews, deleteNews } from '../../services/NewsService'
 import Trending from './Trending'
 import Latest from './Latest'
-import InputText from '../../components/InputText'
-import InputPassword from '../../components/InputPassword'
+import Lottie from 'lottie-react-native';
+import loadingNewsAnimation from '../../assets/lottie/98770-loading-news.json'
 
 
 const Home = (props) => {
@@ -19,7 +19,7 @@ const Home = (props) => {
         const { item } = value;
         return (
             <Latest
-                onPress={() => props.navigation.navigate('Detail', { id: item._id,  createdBy : item.createdBy})}
+                onPress={() => props.navigation.navigate('Detail', { id: item._id, createdBy: item.createdBy })}
                 thumb={{ uri: item.image }}
                 title={item.title}
                 avatar={{ uri: item.createdBy.avatar }}
@@ -30,11 +30,13 @@ const Home = (props) => {
     }
 
     const getNewsData = async () => {
-        console.log('getNewsData')
         setLoading(true);
         const res = await getNews();
         if (res?.statusCode === 200) {
             setNews(res.data);
+            // res.data.forEach(async news => {
+            //     await deleteNews(news._id);
+            // });
         }
         setLoading(false);
     }
@@ -46,10 +48,13 @@ const Home = (props) => {
                     <Image source={require('../../assets/images/notifi_icon.png')} />
                 </View>
             </View>
-            <InputText
-                startIcon={require('../../assets/images/search_icon.png')}
-                endIcon={require('../../assets/images/search2_icon.png')}
-                placeholder='Search' />
+            <Pressable onPress={() => props.navigation.navigate('Search')}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, borderRadius: 6, borderColor: '#4E4B66', padding: 10 }}>
+                    <Image source={require('../../assets/images/search_icon.png')} />
+                    <Text style={{ marginLeft: 8, flex: 1 }}>Search</Text>
+                    <Image source={require('../../assets/images/search2_icon.png')} />
+                </View>
+            </Pressable>
             <View style={myStyle.trendingContainer}>
                 <View style={myStyle.headerForTrending} >
                     <Text style={myStyle.fontTrending}>Trending</Text>
@@ -82,17 +87,14 @@ const Home = (props) => {
                     <Text style={myStyle.itemTabLatest}>Travel</Text>
                     <Text style={myStyle.itemTabLatest}>Science</Text>
                 </ScrollView>
-                <View>
-                    <FlatList
-                        showsHorizontalScrollIndicator={false}
-                        showsVerticalScrollIndicator={false}
-                        // style={myStyle.listLatest}
-                        data={news} //data
-                        refreshing={loading}
-                        onRefresh={getNewsData}
-                        renderItem={renderItem} //adapter
-                        keyExtractor={(item, index) => item._id} />
-                </View>
+                <FlatList
+                    showsHorizontalScrollIndicator={false}
+                    showsVerticalScrollIndicator={false}
+                    data={news}
+                    refreshing={loading}
+                    onRefresh={getNewsData}
+                    renderItem={renderItem}
+                    keyExtractor={(item, index) => item._id} />
             </View>
         </View>
     )
@@ -126,9 +128,6 @@ const myStyle = StyleSheet.create({
     tabLatest: {
         height: 40,
         marginTop: 16,
-        // flexDirection: 'row',
-        // justifyContent: 'space-between',
-        flexWrap: 'wrap',
     },
 
     latestContainer: {

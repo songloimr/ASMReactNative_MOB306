@@ -3,7 +3,7 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import React, { useContext } from 'react'
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from '../../../contexts/UserContext';
 import arrowRight from '../../../assets/images/arrow_mini_icon.png'
 
@@ -23,9 +23,15 @@ const ItemMenu = ({ title, icon, onPress = () => { } }) => {
   )
 }
 
+
 const Setting = (props) => {
   //user context
   const { setUser } = useContext(UserContext);
+
+  const handleLogout = async () => {
+    await AsyncStorage.removeItem('token');
+    setUser(null);
+  }
 
   const { navigation } = props;
   return (
@@ -58,16 +64,16 @@ const Setting = (props) => {
         />
         <View style={styles.vbodyItem}>
           <View style={styles.vtitle}>
-              <Image style={styles.itemMenuIcon} source={require('../../../assets/images/darkmode_Icon.png')} />
+            <Image style={styles.itemMenuIcon} source={require('../../../assets/images/darkmode_Icon.png')} />
             <Text style={styles.txtTitle}>Dark Mode</Text>
           </View>
           <Image style={styles.arrowIcon} source={require('../../../assets/images/Toggle.png')} />
 
         </View>
         <ItemMenu
-          title="Log Out"
+          title="Logout"
           icon={require('../../../assets/images/logout_Icon.png')}
-          onPress={() => setUser(null)}
+          onPress={handleLogout}
         />
       </View>
 

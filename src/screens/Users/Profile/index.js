@@ -9,7 +9,8 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { UserContext } from '../../../contexts/UserContext';
 
 import Latest from '../../Home/Latest';
-
+import Lottie from 'lottie-react-native';
+import loadingNewsAnimation from '../../../assets/lottie/98770-loading-news.json'
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -42,30 +43,40 @@ const Profile = (props) => {
   const { navigation } = props;
   const [newList, setNewList] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const getMyListNews = async () => {
+    setLoading(true);
+    const res = await getMyNews();
+    if (res?.statusCode === 200) {
+      const createdBy = { name: currentUser.name, avatar: currentUser.avatar }
+      setNewList(res.data.map(
+        (item) => {
+          return { ...item, createdBy }
+        }
+      ));
+    }
+    setLoading(false);
+  }
   useEffect(() => {
-    (async function () {
-      const res = await getMyNews();
-      if (res?.statusCode === 200) {
-        const createdBy = { name : currentUser.name, avatar : currentUser.avatar}
-        setNewList(res.data.map(
-          (item) => {
-            return { ...item, createdBy}
-          }
-        ));
-      }
-    })()
+    getMyListNews();
   }, [])
 
-  const MyNewList = () => {
+  const MyNewList = (props) => {
     return (
-      <FlatList
-        style={{ backgroundColor: '#fff' }}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        data={newList}
-        renderItem={item => renderItem(item, props.navigation)}
-        keyExtractor={(item, index) => item._id}
-      />
+      <View style={{ backgroundColor : '#fff', flex : 1}}>
+        {loading ? <Lottie source={loadingNewsAnimation} autoPlay loop /> :
+          (<FlatList
+            style={{ backgroundColor: '#fff' }}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            refreshing={loading}
+            onRefresh={getMyListNews}
+            data={newList}
+            renderItem={item => renderItem(item, props.navigation)}
+            keyExtractor={(item, index) => item._id}
+          />)
+        }
+      </View>
     )
   }
 

@@ -52,3 +52,23 @@ export const uploadImage = async (form) => {
         console.log(error);
     }
 }
+
+export const deleteNews = async (id) => {
+    try {
+        const response = await AxiosInstance().delete(`/articles/${id}/delete`);
+        return response;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
+
+export const searchNews = async (keyword) => {
+    try {
+        const response = await AxiosInstance().get(`/articles/search?title=${keyword}`);
+        return response;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}

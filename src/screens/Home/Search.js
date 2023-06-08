@@ -1,29 +1,89 @@
 import {
     Image, StyleSheet, Text,
-    TextInput, TouchableHighlight, View
+    TextInput, View, TouchableOpacity, FlatList
 } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
+import Latest from './Latest'
+import { searchNews } from '../../services/NewsService'
+import Lottie from 'lottie-react-native';
+import SearchingAnimation from '../../assets/lottie/130477-searching.json'
 
-const Search = () => {
+
+
+const Search = (props) => {
+    const [text, setText] = useState('')
+    const [showClearIcon, setShowClearIcon] = useState(false)
+    const [searchResults, setSearchResults] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
+    const searchByTitle = async (text) => {
+        setIsLoading(true)
+        const results = await searchNews(text)
+        setSearchResults(results.data)
+        setIsLoading(false)
+    }
+
+    useEffect(() => {
+        let timer
+        if (text.length > 0) {
+            timer = setTimeout(() => {
+                searchByTitle(text)
+            }, 1000);
+        }
+        return () => clearTimeout(timer)
+    }, [text])
+
+
+    const handleClear = useCallback((text) => {
+        setText(text)
+        setShowClearIcon(text.length > 0)
+    }, [text])
+
+    const renderItem = (value) => {
+        const { item } = value;
+        return (
+            <Latest
+                onPress={() => props.navigation.navigate('Detail', { id: item._id })}
+                thumb={{ uri: item.image }}
+                title={item.title}
+                avatar={{ uri: item.createdBy.avatar }}
+                author={item.createdBy.name}
+                time={item.createdAt}
+            />
+        )
+    }
+
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                <TouchableHighlight>
-                    <Image source={require('../../assets/images/searchIcon.png')} />
-                </TouchableHighlight>
+            <View style={styles.searchContainer}>
+                <Image source={require('../../assets/images/searchIcon.png')} style={{ margin : 5 }} />
                 <TextInput
+                    value={text}
                     style={styles.input}
+                    onChangeText={handleClear}
                     placeholder="Search"
                     placeholderTextColor={'gray'}
                 />
-                <TouchableHighlight>
-                    <Image source={require('../../assets/images/xIcon.png')} />
-                </TouchableHighlight>
+                {showClearIcon &&
+                    (<TouchableOpacity onPress={
+                        () => {
+                            setText('')
+                            setShowClearIcon(false)
+                        }
+                    }>
+                        <Image source={require('../../assets/images/xIcon.png')} />
+                    </TouchableOpacity>)}
             </View>
 
             <Text style={styles.txtTitle}>News</Text>
-            <View style={styles.container}>
-
+            <View style={{ flex: 1, width: '100%' }}>
+                {isLoading ? <Lottie source={SearchingAnimation} autoPlay loop /> :
+                    (<FlatList
+                        showsHorizontalScrollIndicator={false}
+                        showsVerticalScrollIndicator={false}
+                        data={searchResults}
+                        renderItem={renderItem} //adapter
+                        keyExtractor={(item, index) => item._id} />)}
             </View>
         </View>
     )
@@ -44,14 +104,12 @@ const styles = StyleSheet.create({
     },
     input: {
         flex: 1,
-        marginLeft: 10,
-        marginRight: 10,
         fontWeight: '400',
         fontSize: 14,
         lineHeight: 24,
         color: '#000000',
     },
-    header: {
+    searchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -62,12 +120,11 @@ const styles = StyleSheet.create({
         borderColor: '#4E4B66',
         borderRadius: 6,
         paddingHorizontal: 10,
-        paddingVertical: 5,
     },
     container: {
         flex: 1,
         alignItems: 'center',
-        // justifyContent: 'center',
+        backgroundColor: '#FFFFFF',
         padding: 24,
     },
 })
