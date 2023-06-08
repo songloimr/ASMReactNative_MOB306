@@ -1,11 +1,14 @@
+<<<<<<< HEAD
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList, Pressable } from 'react-native'
+=======
+import { View, Text, StyleSheet, Image, TextInput, ScrollView } from 'react-native'
+>>>>>>> 491fcbee8214837091eb90f4c6e6cd523e493607
 import React, { useState, useEffect } from 'react'
 import { getNews, deleteNews } from '../../services/NewsService'
 import Trending from './Trending'
 import Latest from './Latest'
 import Lottie from 'lottie-react-native';
 import loadingNewsAnimation from '../../assets/lottie/98770-loading-news.json'
-
 
 const Home = (props) => {
     useEffect(() => {
@@ -15,8 +18,7 @@ const Home = (props) => {
     const [news, setNews] = useState([]);
     const [loading, setLoading] = useState(false);
 
-    const renderItem = (value) => {
-        const { item } = value;
+    const renderItem = (item) => {
         return (
             <Latest
                 onPress={() => props.navigation.navigate('Detail', { id: item._id, createdBy: item.createdBy })}
@@ -40,8 +42,9 @@ const Home = (props) => {
         }
         setLoading(false);
     }
+
     return (
-        <View style={myStyle.body} >
+        <ScrollView style={myStyle.body}>
             <View style={myStyle.header}>
                 <Image source={require('../../assets/images/kabar.png')} />
                 <View style={myStyle.notifi_icon}>
@@ -82,11 +85,12 @@ const Home = (props) => {
                     <Text style={myStyle.itemTabLatest}>All</Text>
                     <Text style={myStyle.itemTabLatest}>Sports</Text>
                     <Text style={myStyle.itemTabLatest}>Politics</Text>
-                    <Text style={myStyle.itemTabLatest}>Bussiness</Text>
+                    <Text style={myStyle.itemTabLatest}>Business</Text>
                     <Text style={myStyle.itemTabLatest}>Health</Text>
                     <Text style={myStyle.itemTabLatest}>Travel</Text>
                     <Text style={myStyle.itemTabLatest}>Science</Text>
                 </ScrollView>
+<<<<<<< HEAD
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -95,13 +99,22 @@ const Home = (props) => {
                     onRefresh={getNewsData}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item._id} />
+=======
+                <View style = {{paddingBottom: 30}}>
+                    {news.map((item, index) => (
+                        <React.Fragment key={index}>
+                            {renderItem(item)}
+                        </React.Fragment>
+                    ))}
+                </View>
+>>>>>>> 491fcbee8214837091eb90f4c6e6cd523e493607
             </View>
-        </View>
+        </ScrollView>
     )
 }
-//adapter
 
 export default Home
+
 
 //css
 const myStyle = StyleSheet.create({

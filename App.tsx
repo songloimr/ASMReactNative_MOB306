@@ -29,6 +29,13 @@ function App(): JSX.Element {
           <AppNavigation/>
         </NewsProvider>
       </UserProvider>
+<<<<<<< HEAD
+=======
+      {/* <Setting/>
+      <EditProfile/>
+      <Profile/>
+      <Search/> */}
+>>>>>>> 491fcbee8214837091eb90f4c6e6cd523e493607
     </SafeAreaView>
   );
 }
