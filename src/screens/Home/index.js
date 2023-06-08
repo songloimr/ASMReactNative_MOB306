@@ -81,7 +81,7 @@ const Home = (props) => {
                     <Text style={myStyle.itemTabLatest}>Travel</Text>
                     <Text style={myStyle.itemTabLatest}>Science</Text>
                 </ScrollView>
-                <View style = {{paddingBottom: 33}}>
+                <View style = {{paddingBottom: 30}}>
                     {news.map((item, index) => (
                         <React.Fragment key={index}>
                             {renderItem(item)}
