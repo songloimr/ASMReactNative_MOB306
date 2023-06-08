@@ -42,3 +42,13 @@ export const getNewsById = async (id) => {
         console.log(error);
     }
 }
+
+export const uploadImage = async (form) => {
+    try {
+        const response = await AxiosInstance( 'multipart/form-data').post('/media/upload', form);
+        return response;
+    }
+    catch (error) {
+        console.log(error);
+    }
+}

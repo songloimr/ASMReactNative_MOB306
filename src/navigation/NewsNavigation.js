@@ -6,8 +6,7 @@ const Tab = createBottomTabNavigator();
 import HomeStack from './HomeStack';
 import Bookmark from '../screens/Home/Bookmark';
 import ProfileStack from './ProfileStack';
-import CreateNews from '../screens/Users/CreateNews';
-import Detail from '../screens/Home/Detail';
+import Explore from '../screens/Home/Explore';
 
 function CustomTabBarIcon(route, color) {
   let icon = require('../assets/images/bottomnavigation_home.png')
@@ -37,9 +36,8 @@ const NewsNavigation = () => {
       })}
     >
       <Tab.Screen name='HomeStack' component={HomeStack} />
-      <Tab.Screen name='Explore' component={CreateNews} />
-      {/* <Tab.Screen name='Bookmark' component={Bookmark} /> */}
-      <Tab.Screen name='Bookmark' component={Detail} />
+      <Tab.Screen name='Explore' component={Explore} />
+      <Tab.Screen name='Bookmark' component={Bookmark} />
       <Tab.Screen name='ProfileStack' component={ProfileStack} />
     </Tab.Navigator>
   )

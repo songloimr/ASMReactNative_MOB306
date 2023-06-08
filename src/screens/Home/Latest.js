@@ -2,6 +2,8 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import moment from 'moment'
 
+import icon_clock from '../../assets/images/logoTime.png'
+import more3Dot from '../../assets/images/3dot_Icon.png'
 
 const DefaultAvatar = () => {
     return (
@@ -27,11 +29,10 @@ const Latest = ({ thumb, title, avatar, author, time, onPress = function () { } 
                     <View style={{ flexDirection: 'row' }} >
                         {!!avatar.uri ? <Image style={myStyle.authorAvatar} source={avatar} /> : <DefaultAvatar />}
                         <Text style={myStyle.authorName}>{author}</Text>
-                        <Image style={myStyle.logoTime} source={require('../../assets/images/logoTime.png')} />
+                        <Image style={myStyle.logoTime} source={icon_clock} />
                         <Text style={myStyle.fontTime}>{parseTime(time)}</Text>
                     </View>
-                    <Image style={myStyle.dotIcon}
-                        source={require('../../assets/images/3dot_Icon.png')} />
+                    <Image style={myStyle.dotIcon} source={more3Dot} />
                 </View>
             </View>
         </TouchableOpacity>

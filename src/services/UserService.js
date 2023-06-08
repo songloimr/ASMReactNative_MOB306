@@ -1,5 +1,5 @@
-
 import AxiosInstance from "../utils/helpers/AxiosInstance";
+
 
 export const register = async (email, password) => {
     const body = { email, password };
@@ -17,3 +17,4 @@ export const updateInfomation = async (infomation) => {
     const response = await AxiosInstance().post(`/users/update-profile`, infomation);
     return response;
 }
+

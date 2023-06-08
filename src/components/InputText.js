@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View, TextInput, Image } from 'react-native'
 import React from 'react'
 
-const InputText = ({ placeholder = '', startIcon, endIcon }) => {
+const InputText = (props) => {
     return (
         <View style={styles.container}>
-            {startIcon && <Image source={startIcon}></Image>}
-            <TextInput style={styles.inputText} placeholder={placeholder} />
-            {endIcon && <Image source={endIcon}></Image>}
+            {props.startIcon && <Image source={props.startIcon}></Image>}
+            <TextInput {...props} style={styles.inputText} />
+            {props.endIcon && <Image source={props.endIcon}></Image>}
         </View>
     )
 }

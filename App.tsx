@@ -22,18 +22,21 @@ import EditProfile from './src/screens/Users/Profile/EditProfile';
 import Search from './src/screens/Home/Search';
 
 function App(): JSX.Element {
-
   return (
     <SafeAreaView style={styles.body}>
       {/* <UserProvider>
         <NewsProvider>
           <AppNavigation/>
         </NewsProvider>
+<<<<<<< HEAD
       </UserProvider> */}
       {/* <Setting/> */}
       {/* <EditProfile/> */}
       {/* <Profile/> */}
       <Search/>
+=======
+      </UserProvider>
+>>>>>>> bcef390c63e85c1664016ade6c62de5a5f427430
     </SafeAreaView>
   );
 }

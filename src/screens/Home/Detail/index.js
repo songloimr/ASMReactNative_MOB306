@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Image, Pressable, TouchableOpacity, ScrollView } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import moment from 'moment'
 import { getNewsById } from '../../../services/NewsService';
 import Lottie from 'lottie-react-native';
@@ -15,13 +15,13 @@ const Detail = (props) => {
     const { navigation, route } = props;
     const { id, createdBy } = route.params;
 
-    const [loading, setLoading] = React.useState(false);
-    const [thumbUrl, setThumbUrl] = React.useState(null);
-    const [avatarAuthor, setAvatarAuthor] = React.useState(null);
-    const [nameAuthor, setNameAuthor] = React.useState('');
-    const [publishTime, setPublishTime] = React.useState('');
-    const [title, setTitle] = React.useState('');
-    const [content, setContent] = React.useState('');
+    const [loading, setLoading] = useState(false);
+    const [thumbUrl, setThumbUrl] = useState('https://phutungnhapkhauchinhhang.com/wp-content/uploads/2020/06/default-thumbnail.jpg');
+    const [avatarAuthor, setAvatarAuthor] = useState('https://img.icons8.com/ios-filled/50/user-male-circle.png');
+    const [nameAuthor, setNameAuthor] = useState('');
+    const [publishTime, setPublishTime] = useState('');
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
 
 
     useEffect(() => {
@@ -30,8 +30,8 @@ const Detail = (props) => {
             const res = await getNewsById(id);
             if (res?.statusCode === 200) {
                 const { createdAt, title, content, image } = res.data[0];
-                setThumbUrl(image);
-                setAvatarAuthor(createdBy.avatar);
+                !!image && setThumbUrl(image);
+                !!createdBy.avatar && setAvatarAuthor(createdBy.avatar);
                 setNameAuthor(createdBy.name);
                 setPublishTime(createdAt);
                 setTitle(title);

@@ -18,7 +18,6 @@ const HomeStack = () => {
                 headerShown: false,
             }}
         >
-            
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Detail" component={Detail} />
         </Stack.Navigator>
