@@ -132,10 +132,11 @@ const styles = StyleSheet.create({
         height: 180,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#EEF1F4',
+        backgroundColor: '#EEF1F3',
         borderWidth: 1.5,
         borderColor: '#4E4B66',
         borderStyle: 'dashed',
+
     },
     formatBar: {
         position: 'absolute',
