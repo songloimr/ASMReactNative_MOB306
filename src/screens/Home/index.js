@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import { View, Text, StyleSheet, Image, TextInput, ScrollView, FlatList, Pressable } from 'react-native'
-=======
-import { View, Text, StyleSheet, Image, TextInput, ScrollView } from 'react-native'
->>>>>>> 491fcbee8214837091eb90f4c6e6cd523e493607
 import React, { useState, useEffect } from 'react'
 import { getNews, deleteNews } from '../../services/NewsService'
 import Trending from './Trending'
@@ -90,7 +86,6 @@ const Home = (props) => {
                     <Text style={myStyle.itemTabLatest}>Travel</Text>
                     <Text style={myStyle.itemTabLatest}>Science</Text>
                 </ScrollView>
-<<<<<<< HEAD
                 <FlatList
                     showsHorizontalScrollIndicator={false}
                     showsVerticalScrollIndicator={false}
@@ -99,15 +94,6 @@ const Home = (props) => {
                     onRefresh={getNewsData}
                     renderItem={renderItem}
                     keyExtractor={(item, index) => item._id} />
-=======
-                <View style = {{paddingBottom: 30}}>
-                    {news.map((item, index) => (
-                        <React.Fragment key={index}>
-                            {renderItem(item)}
-                        </React.Fragment>
-                    ))}
-                </View>
->>>>>>> 491fcbee8214837091eb90f4c6e6cd523e493607
             </View>
         </ScrollView>
     )
