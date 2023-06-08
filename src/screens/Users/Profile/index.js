@@ -11,6 +11,8 @@ import { UserContext } from '../../../contexts/UserContext';
 import Latest from '../../../components/NewsItem';
 import Lottie from 'lottie-react-native';
 import loadingNewsAnimation from '../../../assets/lottie/98770-loading-news.json'
+import Swipeable from 'react-native-swipeable';
+
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -24,18 +26,39 @@ const ThongKe = ({ title, subTitle }) => {
 }
 
 const renderItem = ({ item }, navigation) => {
+
+  const rightButtons = [
+    <TouchableOpacity style={{ backgroundColor: '#FF0000', justifyContent: 'center', alignItems: 'center', height: 100 }}>
+      <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 16 }}>Delete</Text>
+    </TouchableOpacity>
+  ];
+
+  const leftButtons = [
+    <TouchableOpacity style={{ backgroundColor: '#FF0000', justifyContent: 'center', alignItems: 'center', height: 100 }}>
+      <Text style={{ color: '#FFFFFF', fontWeight: '600', fontSize: 16 }}>Delete</Text>
+    </TouchableOpacity>
+  ];
+
+
   return (
-    <Latest
-      onPress={() => navigation.navigate('Home', {
-        screen: 'Detail',
-        params: { id: item._id, createdBy: item.createdBy }
-      })}
-      thumb={{ uri: item.image }}
-      title={item.title}
-      avatar={{ uri: item.createdBy.avatar }}
-      author={item.createdBy.name}
-      time={item.createdAt}
-    />
+    <Swipeable
+      rightButtons={rightButtons}
+      leftButtons={leftButtons}
+      rightButtonWidth={100}
+      leftButtonWidth={100}
+    >
+      <Latest
+        onPress={() => navigation.navigate('Home', {
+          screen: 'Detail',
+          params: { id: item._id, createdBy: item.createdBy }
+        })}
+        thumb={{ uri: item.image }}
+        title={item.title}
+        avatar={{ uri: item.createdBy.avatar }}
+        author={item.createdBy.name}
+        time={item.createdAt}
+      />
+    </Swipeable>
   )
 }
 const Profile = (props) => {
@@ -63,7 +86,7 @@ const Profile = (props) => {
 
   const MyNewList = (props) => {
     return (
-      <View style={{ backgroundColor : '#fff', flex : 1}}>
+      <View style={{ backgroundColor: '#fff', flex: 1 }}>
         {loading ? <Lottie source={loadingNewsAnimation} autoPlay loop /> :
           (<FlatList
             style={{ backgroundColor: '#fff' }}
