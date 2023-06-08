@@ -17,7 +17,7 @@ function CustomTabBarIcon(route, color) {
     case 'Bookmark':
       icon = require('../assets/images/bottomnavigation_bookmark.png')
       break;
-    case 'ProfileStack':
+    case 'Profile':
       icon = require('../assets/images/bottomnavigation_profile.png')
       break;
     default:

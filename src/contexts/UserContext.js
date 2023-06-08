@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from 'react'
+import React, { useState, createContext } from 'react'
 import { login, register } from '../services/UserService';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 

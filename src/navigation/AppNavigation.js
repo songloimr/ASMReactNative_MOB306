@@ -5,7 +5,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import { UserContext } from '../contexts/UserContext';
 
 const AppNavigation = () => {
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
+
   return (
     <NavigationContainer>
       {user ? <NewsNavigation /> : <UserNavigation />}

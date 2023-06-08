@@ -9,7 +9,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Snackbar from 'react-native-snackbar';
 import { UserContext } from '../../../contexts/UserContext';
 import ModalUploadImage from '../../../components/ModalUploadImage';
-import DatePicker from 'react-native-date-picker';
+import ModalDatePicker from '../../../components/ModalDatePicker';
 
 const EditProfile = (props) => {
   const { user: currentUser, setUser } = useContext(UserContext);
@@ -17,7 +17,7 @@ const EditProfile = (props) => {
   const [isShowModal, setIsShowModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
-  const [isShowDatePicker, setIsShowDatePicker] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (isSaveClicked) {
@@ -47,7 +47,7 @@ const EditProfile = (props) => {
   const [email, setEmail] = useState(currentUser.email ?? '');
   const [phoneNumber, setPhoneNumber] = useState(currentUser.phone ?? '');
   const [address, setAddress] = useState(currentUser.address ?? '');
-  const [dateOfBirth, setDateOfBirth] = useState(currentUser.dob ? new Date(currentUser.dob) : new Date());
+  const [dateOfBirth, setDateOfBirth] = useState(currentUser.dob ?? new Date().toISOString);
 
   const { navigation } = props;
   return (
@@ -121,9 +121,7 @@ const EditProfile = (props) => {
                 value={phoneNumber}
                 onChangeText={(text) => setPhoneNumber(text)}
                 style={styles.txtInput}
-                placeholder="Enter your Phone Number*"
-                placeholderTextColor="grey"
-                keyboardType="phone-pad"
+                placeholder="Enter your Phone Number*" placeholderTextColor="grey" keyboardType="phone-pad"
               />
             </View>
 
@@ -133,25 +131,17 @@ const EditProfile = (props) => {
                 value={address}
                 onChangeText={(text) => setAddress(text)}
                 style={styles.txtInput}
-                placeholder="Enter your Address"
-                placeholderTextColor="grey"
-                keyboardType="default"
+                placeholder="Enter your Address" placeholderTextColor="grey" keyboardType="default"
               />
             </View>
 
             <View style={styles.vbodyItem}>
               <Text style={styles.txtTitle}>Date of Birth</Text>
-              <TouchableOpacity onPress={() => setIsShowDatePicker(true)} style={{width: '100%'}}>
-                <Text style={[styles.txtInput]}>{dateOfBirth.toLocaleDateString()}</Text>
+              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%', alignItems: 'center' }}>
+                <Text style={styles.txtInput}>{dateOfBirth}</Text>
               </TouchableOpacity>
-              {isShowDatePicker && <DatePicker
-                date={dateOfBirth}
-                onDateChange={setDateOfBirth}
-                mode="date"
-              />}
+              <ModalDatePicker controlModal={[showDatePicker, setShowDatePicker]} onDateSelected={(d) => setDateOfBirth(d.toISOString())} />
             </View>
-
-
           </View>
         </View>
       </ScrollView>
@@ -163,26 +153,18 @@ export default EditProfile
 
 const styles = StyleSheet.create({
   txtTitle: {
-    fontWeight: '400',
     fontSize: 14,
-    lineHeight: 21,
-    letterSpacing: 0.12,
     color: '#4E4B66',
     marginBottom: 4,
   },
   txtInput: {
     width: '100%',
-    height: 48,
     borderColor: '#4E4B66',
     borderWidth: 1,
     borderRadius: 6,
-    padding: 10,
-    fontWeight: '400',
+    padding: 8,
     fontSize: 14,
-    lineHeight: 21,
-    letterSpacing: 0.12,
     color: '#050505',
-    backgroundColor: '#FFFFFF',
   },
   vbodyItem: {
     flexDirection: 'column',

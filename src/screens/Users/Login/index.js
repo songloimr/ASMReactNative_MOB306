@@ -21,8 +21,6 @@ const Login = (props) => {
     setIsLoading(false);
     if (!result) {
       Alert.alert('Login failed');
-      setEmail('');
-      setPassword('');
     }
   }
   useEffect(() => {
