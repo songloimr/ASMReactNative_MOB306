@@ -9,6 +9,7 @@ import Spinner from 'react-native-loading-spinner-overlay/lib';
 import Snackbar from 'react-native-snackbar';
 import { UserContext } from '../../../contexts/UserContext';
 import ModalUploadImage from '../../../components/ModalUploadImage';
+import DatePicker from 'react-native-date-picker';
 
 const EditProfile = (props) => {
   const { user: currentUser, setUser } = useContext(UserContext);
@@ -16,12 +17,13 @@ const EditProfile = (props) => {
   const [isShowModal, setIsShowModal] = useState(false)
   const [isLoading, setIsLoading] = useState(false);
   const [isSaveClicked, setIsSaveClicked] = React.useState(false);
+  const [isShowDatePicker, setIsShowDatePicker] = useState(false);
 
   useEffect(() => {
     if (isSaveClicked) {
       (async function () {
         setIsLoading(true);
-        const res = await updateInfomation({ avatar, name: fullName, email, phone: phoneNumber, address });
+        const res = await updateInfomation({ avatar, name: fullName, email, phone: phoneNumber, address, dob: dateOfBirth });
         if (res?.statusCode === 200) {
           setUser(res.data);
           Snackbar.show({
@@ -45,7 +47,7 @@ const EditProfile = (props) => {
   const [email, setEmail] = useState(currentUser.email ?? '');
   const [phoneNumber, setPhoneNumber] = useState(currentUser.phone ?? '');
   const [address, setAddress] = useState(currentUser.address ?? '');
-
+  const [dateOfBirth, setDateOfBirth] = useState(currentUser.dob ? new Date(currentUser.dob) : new Date());
 
   const { navigation } = props;
   return (
@@ -136,6 +138,20 @@ const EditProfile = (props) => {
                 keyboardType="default"
               />
             </View>
+
+            <View style={styles.vbodyItem}>
+              <Text style={styles.txtTitle}>Date of Birth</Text>
+              <TouchableOpacity onPress={() => setIsShowDatePicker(true)} style={{width: '100%'}}>
+                <Text style={[styles.txtInput]}>{dateOfBirth.toLocaleDateString()}</Text>
+              </TouchableOpacity>
+              {isShowDatePicker && <DatePicker
+                date={dateOfBirth}
+                onDateChange={setDateOfBirth}
+                mode="date"
+              />}
+            </View>
+
+
           </View>
         </View>
       </ScrollView>
