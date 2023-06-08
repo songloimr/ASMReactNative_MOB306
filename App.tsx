@@ -10,13 +10,13 @@ import { NewsProvider } from './src/contexts/NewsContext';
 
 function App(): JSX.Element {
   return (
-    <SafeAreaView style={styles.body}>
-      <UserProvider>
-        <NewsProvider>
-          <AppNavigation />
-        </NewsProvider>
-      </UserProvider>
-    </SafeAreaView>
+      <SafeAreaView style={styles.body}>
+        <UserProvider>
+          <NewsProvider>
+            <AppNavigation />
+          </NewsProvider>
+        </UserProvider>
+      </SafeAreaView>
   );
 }
 

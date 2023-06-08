@@ -1,6 +1,7 @@
 import {
   Image, Pressable,
-  StyleSheet, Text, View, TouchableHighlight, Dimensions, TouchableOpacity, FlatList
+  StyleSheet, Text, View, TouchableHighlight, Dimensions, TouchableOpacity, FlatList,
+  KeyboardAvoidingView
 } from 'react-native'
 
 import React, { useEffect, useState, useContext } from 'react'
@@ -11,7 +12,6 @@ import { UserContext } from '../../../contexts/UserContext';
 import Latest from '../../../components/NewsItem';
 import Lottie from 'lottie-react-native';
 import loadingNewsAnimation from '../../../assets/lottie/98770-loading-news.json'
-
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -75,7 +75,7 @@ const Profile = (props) => {
             refreshing={loading}
             onRefresh={getMyListNews}
             data={newList}
-            renderItem={item => renderItem(item, props.navigation)}
+            renderItem={(item) => renderItem(item, props.navigation)}
             keyExtractor={(item, index) => item._id}
           />)
         }
@@ -84,94 +84,121 @@ const Profile = (props) => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.vTitle}>
-        <Text style={{ width: 24 }}></Text>
-        <Text style={styles.txtProfile}>Profile</Text>
-        <TouchableHighlight
-          underlayColor={'rgba(0, 0, 0, 0)'}
-          onPress={() => navigation.navigate('Setting')}>
+      <GestureHandlerRootView style={styles.container}>
+        <View style={styles.vTitle}>
+          <Text style={{ width: 24 }}></Text>
+          <Text style={styles.txtProfile}>Profile</Text>
+          <TouchableHighlight
+            underlayColor={'rgba(0, 0, 0, 0)'}
+            onPress={() => navigation.navigate('Setting')}>
+            <Image
+              style={styles.settingIcon}
+              source={require('../../../assets/images/settingIcon.png')} />
+          </TouchableHighlight>
+        </View>
+        <View style={styles.avatarContainer}>
           <Image
-            style={styles.settingIcon}
-            source={require('../../../assets/images/settingIcon.png')} />
-        </TouchableHighlight>
-      </View>
-      <View style={styles.avatarContainer}>
-        <Image
-          style={styles.avatar}
-          source={{ uri: currentUser.avatar }} />
-        <ThongKe title='2156' subTitle='Followers' />
-        <ThongKe title='567' subTitle='Following' />
-        <ThongKe title='23' subTitle='News' />
-      </View>
-      <View style={styles.infomationContainer}>
-        <Text style={styles.txtName}>{currentUser.name}</Text>
-        <Text style={styles.description}>
-          Lorem Ipsum is simply dummy text of the
-          printing and typesetting industry.
-        </Text>
-      </View>
-      <View style={styles.vBtn}>
-        <Pressable
-          style={styles.btnEdit}
-          onPress={() => navigation.navigate('EditProfile')}
-        >
-          <Text style={styles.txtBtnEdit}>Edit profile</Text>
-        </Pressable>
-        <Pressable
-          style={styles.btnEdit}
-          onPress={() => navigation.navigate('EditProfile')}
-        >
-          <Text style={styles.txtBtnEdit}>Website</Text>
-        </Pressable>
-      </View>
-      <View style={styles.newsContainer}>
-        <Tab.Navigator
-          screenOptions={{
-            tabBarPressColor: '#FFFFFF',
-            tabBarLabelStyle: {
-              fontWeight: '400',
-              fontSize: 16,
-              color: '#000000',
-            },
-            tabBarItemStyle: {
-              width: 100,
-            },
-            tabBarContentContainerStyle: {
-              justifyContent: 'center',
-            },
-            tabBarIndicatorStyle: {
-              backgroundColor: '#1877F2',
-              height: 4,
-              left: 125,
-            },
-          }}
-        >
-          <Tab.Screen name="News" component={MyNewList} />
-        </Tab.Navigator>
-      </View>
+            style={styles.avatar}
+            source={{ uri: currentUser.avatar }} />
+          <ThongKe title='2156' subTitle='Followers' />
+          <ThongKe title='567' subTitle='Following' />
+          <ThongKe title='23' subTitle='News' />
+        </View>
+        <View style={styles.infomationContainer}>
+          <Text style={styles.txtName}>{currentUser.name}</Text>
+          <Text style={styles.description}>
+            Lorem Ipsum is simply dummy text of the
+            printing and typesetting industry.
+          </Text>
+        </View>
+        <View style={styles.vBtn}>
+          <Pressable
+            style={styles.btnEdit}
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={styles.txtBtnEdit}>Edit profile</Text>
+          </Pressable>
+          <Pressable
+            style={styles.btnEdit}
+            onPress={() => navigation.navigate('EditProfile')}
+          >
+            <Text style={styles.txtBtnEdit}>Website</Text>
+          </Pressable>
+        </View>
+        <View style={styles.newsContainer}>
+          <Tab.Navigator
+            screenOptions={{
+              tabBarPressColor: '#FFFFFF',
+              tabBarLabelStyle: {
+                fontWeight: '400',
+                fontSize: 16,
+                color: '#000000',
+              },
+              tabBarItemStyle: {
+                width: 100,
+              },
+              tabBarContentContainerStyle: {
+                justifyContent: 'center',
+              },
+              tabBarIndicatorStyle: {
+                backgroundColor: '#1877F2',
+                height: 4,
+                left: 125,
+              },
+            }}
+          >
+            <Tab.Screen name="News" component={MyNewList} />
+          </Tab.Navigator>
+        </View>
 
-      <TouchableOpacity onPress={() => navigation.navigate('CreateNews')} style={{
-        position: 'absolute',
-        right: 24,
-        bottom: 24,
-        width: 54,
-        height: 54,
-        borderRadius: 27,
-        elevation: 5,
-        backgroundColor: '#1877F2',
-      }}>
-        <Image source={require('../../../assets/images/plus.png')}
-          style={{ tintColor: '#FFFFFF', width: 24, height: 24, margin: 15 }}
-        />
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateNews')} style={{
+          position: 'absolute',
+          right: 24,
+          bottom: 24,
+          width: 54,
+          height: 54,
+          borderRadius: 27,
+          elevation: 5,
+          backgroundColor: '#1877F2',
+        }}>
+          <Image source={require('../../../assets/images/plus.png')}
+            style={{ tintColor: '#FFFFFF', width: 24, height: 24, margin: 15 }}
+          />
+        </TouchableOpacity>
+      </GestureHandlerRootView>
+
   )
 }
 
 export default Profile
 
 const styles = StyleSheet.create({
+
+  leftSwipe: {
+    marginRight: 10,
+    backgroundColor: '#F1F2F3',
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    alignSelf: 'center'
+  },
+
+  rightSwipe: {
+    backgroundColor: '#F1F2F3',
+    marginLeft: 10,
+    marginRight: 10,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
+    alignSelf: 'center'
+  },
+
+
+
   txtBtnEdit: {
     fontWeight: '600',
     fontSize: 16,
