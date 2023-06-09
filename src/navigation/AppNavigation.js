@@ -5,7 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { UserContext } from '../contexts/UserContext';
 
 const AppNavigation = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   return (
     <NavigationContainer>

@@ -11,8 +11,8 @@ const Login = (props) => {
   const { navigation } = props;
   const [isLoading, setIsLoading] = useState(false);
 
-  const [email, setEmail] = useState('tomheo11233@gmail.com')
-  const [password, setPassword] = useState('tomheo11233')
+  const [email, setEmail] = useState('songloimr@gmail.com')
+  const [password, setPassword] = useState('12345')
   const { onLogin } = useContext(UserContext);
 
   const onLoginPress = async () => {

@@ -14,7 +14,7 @@ const RenderUploading = () => {
     )
 }
 
-const ModalUploadImage = ({ controlModal, onImageSelected = (e) => {} , onUploaded = (e) => {}}) => {
+const ModalUploadImage = ({ controlModal, onImageSelected = (e) => { }, onUploaded = (e) => { } }) => {
     const [isUploading, setIsUploading] = useState(false)
     const [isShowModal, setIsShowModal] = controlModal
     const handleAddImage = useCallback(async () => {
