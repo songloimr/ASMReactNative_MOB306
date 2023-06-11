@@ -28,7 +28,7 @@ const Search = (props) => {
         if (text.length > 0) {
             timer = setTimeout(() => {
                 searchByTitle(text)
-            }, 900);
+            }, 700);
         }
         return () => clearTimeout(timer)
     }, [text])

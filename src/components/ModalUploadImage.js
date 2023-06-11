@@ -9,13 +9,14 @@ import uploadAnimation from '../assets/lottie/4510-uploading.json'
 const RenderUploading = () => {
     return (
         <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-            <Lottie style={{ height: 100 }} source={uploadAnimation} autoPlay loop />
+            <Lottie style={{ width : 200, height : 200 }} source={uploadAnimation} autoPlay loop />
         </View>
     )
 }
 
 const ModalUploadImage = ({ controlModal, onImageSelected = (e) => { }, onUploaded = (e) => { } }) => {
     const [isUploading, setIsUploading] = useState(false)
+    const [title, setTitle] = useState('Select Image')
     const [isShowModal, setIsShowModal] = controlModal
     const handleAddImage = useCallback(async () => {
         await launchImageLibrary({
@@ -38,12 +39,14 @@ const ModalUploadImage = ({ controlModal, onImageSelected = (e) => { }, onUpload
     const handleImage = useCallback(async (data) => {
         if (data.assets) {
             onImageSelected(data.assets[0].uri)
+            setIsUploading(true)
+            setTitle('Uploading...')
             const { uri, type, fileName: name } = data.assets[0];
             const formData = new FormData();
             formData.append('image', { uri, name, type })
-            setIsUploading(true)
             const { data: resUpload } = await uploadImage(formData)
             setIsUploading(false)
+            setTitle('Select Image')
             onUploaded(resUpload.path)
         }
         setIsShowModal(false)
@@ -58,15 +61,19 @@ const ModalUploadImage = ({ controlModal, onImageSelected = (e) => { }, onUpload
         <Modal animationType="fade" transparent={true} visible={isShowModal} onRequestClose={closeModal}>
             <Pressable onPress={closeModal} style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' }}>
                 <View style={styles.container}>
+                    <View>
+                        <Text style={{ fontWeight: 'bold', color: '#000', fontSize: 18, marginBottom: 16 }}>{title}</Text>
+                    </View>
                     {isUploading ? <RenderUploading /> :
-                        (<View>
+                        (<View style={{ flexDirection: 'row' }}>
                             <TouchableOpacity onPress={handleAddImage} style={styles.button} >
                                 <Image style={styles.buttonIcon} source={require('../assets/images/image-gallery.png')}></Image>
-                                <Text style={styles.buttonLabel}>Pick from gallery</Text>
+                                <Text style={styles.buttonLabel}>Gallery</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={handleTakePhoto} style={[styles.button, { marginTop: 10 }]} >
+                            <View style={{ width: 16 }} />
+                            <TouchableOpacity onPress={handleTakePhoto} style={styles.button} >
                                 <Image style={styles.buttonIcon} source={require('../assets/images/photo-camera.png')}></Image>
-                                <Text style={styles.buttonLabel}>Take a photo</Text>
+                                <Text style={styles.buttonLabel}>Camera</Text>
                             </TouchableOpacity>
                         </View>)}
                 </View>
@@ -81,11 +88,11 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
         width: '80%',
-        borderRadius: 6,
-        padding: 16
+        borderRadius: 20,
+        padding: 20
     },
     button: {
-        flexDirection: 'row',
+        flex: 1,
         padding: 8,
         backgroundColor: '#fff',
         elevation: 5,
@@ -93,6 +100,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     buttonIcon: {
+        tintColor: '#1877F2',
         width: 24,
         height: 24,
         margin: 8

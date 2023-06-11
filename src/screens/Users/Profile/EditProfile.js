@@ -10,6 +10,7 @@ import Snackbar from 'react-native-snackbar';
 import { UserContext } from '../../../contexts/UserContext';
 import ModalUploadImage from '../../../components/ModalUploadImage';
 import ModalDatePicker from '../../../components/ModalDatePicker';
+import moment from 'moment';
 
 const EditProfile = (props) => {
   const { user: currentUser, setUser } = useContext(UserContext);
@@ -55,7 +56,7 @@ const EditProfile = (props) => {
       <Spinner
         visible={isLoading}
         textContent={'Loading...'}
-        textStyle={styles.spinnerTextStyle}
+        textStyle={{ color: '#fff' }}
       />
       <ScrollView>
         <View style={styles.container}>
@@ -138,7 +139,7 @@ const EditProfile = (props) => {
             <View style={styles.vbodyItem}>
               <Text style={styles.txtTitle}>Date of Birth</Text>
               <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%', alignItems: 'center' }}>
-                <Text style={styles.txtInput}>{dateOfBirth}</Text>
+                <Text style={styles.txtInput}>{moment(dateOfBirth).format('DD/MM/YYYY')}</Text>
               </TouchableOpacity>
               <ModalDatePicker controlModal={[showDatePicker, setShowDatePicker]} onDateSelected={(d) => setDateOfBirth(d.toISOString())} />
             </View>
