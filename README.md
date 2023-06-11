@@ -37,7 +37,5 @@ Start the app
 
 ## Screenshots
 
-![](https://i.upanh.org/2023/06/11/createnews1de75b71a78058c1.png)
-![](https://i.upanh.org/2023/06/11/homepagecf4fbf1c06fd95c7.png)
-![](https://i.upanh.org/2023/06/11/profile4808552b30e3501a.png)
+![](https://i.upanh.org/2023/06/11/createnews1de75b71a78058c1.png) ![](https://i.upanh.org/2023/06/11/homepagecf4fbf1c06fd95c7.png) ![](https://i.upanh.org/2023/06/11/profile4808552b30e3501a.png)
 
